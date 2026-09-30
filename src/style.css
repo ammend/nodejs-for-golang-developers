@@ -590,3 +590,7 @@ html[lang="en"] .output-label {
 .queue-cells span { border:1px solid #cbd9e2; padding:8px; border-radius:6px; }
 .queue-demo { border:1px solid #cbd9e2; border-radius:12px; padding:16px; }
 @media(max-width:600px) { .tips-drawer { width:100vw; padding:20px; } }
+
+.tips-drawer .tips-index { display:flex; flex-direction:column; }
+.tips-index button { text-align:left; display:flex; flex-direction:column; gap:4px; }
+.tips-index span { font-size:13px; }

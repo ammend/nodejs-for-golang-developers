@@ -52,7 +52,7 @@ function QueueDemo({ en }) {
 }
 export default function Tips({ lesson, locale }) {
   const en = locale === 'en';
-  const readHash = () => {const id = location.hash.slice(1).replace(/^tip=/, ''); return tips.some(t => t.id === id) ? id : null;};
+  const readHash = () => {const id = location.hash.slice(1).replace(/^tip=/, ''); return id === 'all' || tips.some(t => t.id === id) ? id : null;};
   const [selected, setSelected] = useState(readHash);
   const dialog = useRef(null);
   useEffect(() => {const changed = () => setSelected(readHash()); window.addEventListener('hashchange', changed); return () => window.removeEventListener('hashchange', changed);}, []);
@@ -64,6 +64,7 @@ export default function Tips({ lesson, locale }) {
   return <><div className="tips-bar"><strong>Tips</strong>{(related[lesson.id] || ['modules', 'await']).map(id => {const t = tips.find(t => t.id === id);return <button key={id} onClick={() => open(id)}>{text(t.title)}</button>;})}</div>
     <dialog ref={dialog} className="tips-drawer" aria-label={en ? 'Knowledge tips' : '知识 Tips'} onCancel={close}>
       <button className="tips-close" onClick={close}>{en ? 'Close' : '关闭'} ×</button>
-      {tip && <><p className="eyebrow">TIPS / {tips.indexOf(tip) + 1}</p><h2>{text(tip.title)}</h2><p>{text(tip.intro)}</p><pre>{tip.code}</pre>{tip.id === 'queues' && <QueueDemo en={en} />}<h3>{en ? 'Connect to Go' : '对照 Go'}</h3><p>{text(tip.go)}</p><h3>{en ? 'Watch out' : '容易误解的地方'}</h3><p>{text(tip.trap)}</p><p><a href={tip.url} target="_blank" rel="noreferrer">{en ? 'Official reference' : '官方参考'}</a> · <a href={`#tip=${tip.id}`}>{en ? 'Link to this tip' : '本条链接'}</a></p><nav aria-label={en ? 'All tips' : '全部 Tips'}>{tips.map(t => <button key={t.id} aria-pressed={selected === t.id} onClick={() => open(t.id)}>{text(t.title)}</button>)}</nav></>}
+      {selected === 'all' && <><h2>{en ? 'All Tips' : '全部 Tips'}</h2><p>{en ? 'English title · A–Z' : '按英文标题 A–Z 排序'}</p><nav className="tips-index" aria-label={en ? 'Tips index' : 'Tips 目录'}>{[...tips].sort((a,b) => a.title[1].localeCompare(b.title[1], 'en')).map(t => <button key={t.id} onClick={() => open(t.id)}><strong>{t.title[1]}</strong>{!en && t.title[0] !== t.title[1] && <span>{t.title[0]}</span>}</button>)}</nav></>}
+      {tip && <><p className="eyebrow"><button onClick={() => open('all')}>TIPS</button> / {tips.indexOf(tip) + 1}</p><h2>{text(tip.title)}</h2><p>{text(tip.intro)}</p><pre>{tip.code}</pre>{tip.id === 'queues' && <QueueDemo en={en} />}<h3>{en ? 'Connect to Go' : '对照 Go'}</h3><p>{text(tip.go)}</p><h3>{en ? 'Watch out' : '容易误解的地方'}</h3><p>{text(tip.trap)}</p><p><a href={tip.url} target="_blank" rel="noreferrer">{en ? 'Official reference' : '官方参考'}</a> · <a href={`#tip=${tip.id}`}>{en ? 'Link to this tip' : '本条链接'}</a></p><nav aria-label={en ? 'All tips' : '全部 Tips'}>{tips.map(t => <button key={t.id} aria-pressed={selected === t.id} onClick={() => open(t.id)}>{text(t.title)}</button>)}</nav></>}
     </dialog></>;
 }

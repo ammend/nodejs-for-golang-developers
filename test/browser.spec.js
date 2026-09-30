@@ -327,3 +327,21 @@ test('tips preserve edits, support deep links and show module-specific queue ord
   await dialog.getByRole('button',{name:'Close ×'}).click();
   await expect(editor).toContainText('keep edit');
 });
+
+test('Tips breadcrumb opens an alphabetical drawer index and returns to details', async ({page}) => {
+  await page.goto('/#tip=modules');
+  const dialog = page.getByRole('dialog');
+  await dialog.getByRole('button',{name:'TIPS',exact:true}).click();
+  await expect(dialog.getByRole('heading',{name:'全部 Tips',exact:true})).toBeVisible();
+  const index = dialog.getByRole('navigation',{name:'Tips 目录'});
+  await expect(index.locator('strong')).toHaveText(['Arrow functions and declarations','async / await','ESM / CommonJS','Microtasks, nextTick and timers','Promise / resolve / then']);
+  await index.getByRole('button',{name:'Promise / resolve / then',exact:true}).click();
+  await expect(dialog.getByRole('heading',{name:'Promise / resolve / then',exact:true})).toBeVisible();
+  await dialog.getByRole('button',{name:'TIPS',exact:true}).click();
+  await page.reload();
+  await expect(dialog.getByRole('heading',{name:'全部 Tips',exact:true})).toBeVisible();
+  await page.keyboard.press('Escape');
+  await page.getByLabel('语言 / Language').selectOption('en');
+  await page.goto('/#tip=all');
+  await expect(dialog.getByRole('heading',{name:'All Tips',exact:true})).toBeVisible();
+});
