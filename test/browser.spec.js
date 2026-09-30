@@ -300,3 +300,30 @@ test("start over restores current code and progress without changing other lesso
   await page.getByLabel("语言 / Language").selectOption("en");
   await expect(page.getByRole("button", {name: "Start over", exact: true})).toBeVisible();
 });
+
+test('tips preserve edits, support deep links and show module-specific queue order', async ({ page }) => {
+  await page.goto('/');
+  const editor = page.locator('.node .cm-content');
+  await editor.fill('console.log("keep edit")');
+  await page.getByRole('button', {name:'async / await', exact:true}).click();
+  const dialog = page.getByRole('dialog');
+  await expect(dialog).toBeVisible();
+  await dialog.getByRole('button', {name:'微任务、nextTick 与定时器',exact:true}).click();
+  for(let i=0;i<6;i++) await dialog.getByRole('button',{name:'下一步',exact:true}).click();
+  await expect(dialog.locator('[aria-live]')).toHaveText('A → B → promise → microtask → nextTick → timer');
+  await dialog.getByLabel('模块模式').selectOption('CommonJS');
+  for(let i=0;i<6;i++) await dialog.getByRole('button',{name:'下一步',exact:true}).click();
+  await expect(dialog.locator('[aria-live]')).toHaveText('A → B → nextTick → promise → microtask → timer');
+  await page.keyboard.press('Escape');
+  await expect(dialog).not.toBeVisible();
+  await expect(editor).toContainText('keep edit');
+  await expect(page.getByLabel('已开放子项进度')).toHaveAttribute('value','0');
+  await page.getByLabel('语言 / Language').selectOption('en');
+  await page.goto('/#tip=modules');
+  await expect(dialog).toBeVisible();
+  await expect(dialog.getByRole('heading',{name:'ESM / CommonJS',exact:true})).toBeVisible();
+  await page.setViewportSize({width:390,height:844});
+  expect(await dialog.evaluate(el => el.getBoundingClientRect().width)).toBeLessThanOrEqual(390);
+  await dialog.getByRole('button',{name:'Close ×'}).click();
+  await expect(editor).toContainText('keep edit');
+});

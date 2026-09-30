@@ -8,6 +8,7 @@ import {
 import { go } from "@codemirror/lang-go";
 import { stages, lessons, lessonFiles } from "./catalog";
 import "./style.css";
+import Tips from "./tips.jsx";
 import { translator } from "./i18n";
 
 const languages = [
@@ -459,6 +460,7 @@ function App() {
             <small>{t("仅保存在当前页面内存中")}</small>
           </label>
         )}
+        <Tips lesson={lesson} locale={locale} />
         <div className={`editors ${lesson.mode === "browser" ? "single" : ""}`}>
           {editors.map((language) => (
             <Editor

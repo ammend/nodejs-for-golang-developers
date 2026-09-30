@@ -577,3 +577,16 @@ html[lang="en"] .output-label {
 }
 
 .restart { flex-shrink: 0; margin-left: 16px; padding: 8px 14px; border: 1px solid #cbd9e2; border-radius: 6px; background: white; color: #315568; cursor: pointer; }
+
+.tips-bar { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:18px 0; }
+.tips-bar button, .tips-drawer button { border:1px solid #cbd9e2; border-radius:8px; padding:8px 12px; background:#f4f8fa; color:#245c6c; cursor:pointer; }
+.tips-drawer { position:fixed; inset:0 0 0 auto; margin:0; width:min(580px, 100vw); max-width:100vw; height:100dvh; max-height:100dvh; box-sizing:border-box; border:0; padding:30px; color:#243c48; overflow:auto; }
+.tips-drawer::backdrop { background: #102e4055; }
+.tips-close { float:right; }
+.tips-drawer p { line-height:1.8; }
+.tips-drawer pre { white-space:pre-wrap; overflow-wrap:anywhere; background:#152b37; color:#d3edf0; padding:18px; border-radius:10px; line-height:1.6; }
+.tips-drawer nav, .queue-cells { display:flex; gap:8px; flex-wrap:wrap; }
+.tips-drawer button[aria-pressed=true], .queue-cells .executed { background:#d2f0df; }
+.queue-cells span { border:1px solid #cbd9e2; padding:8px; border-radius:6px; }
+.queue-demo { border:1px solid #cbd9e2; border-radius:12px; padding:16px; }
+@media(max-width:600px) { .tips-drawer { width:100vw; padding:20px; } }
