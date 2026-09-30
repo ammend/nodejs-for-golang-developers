@@ -303,6 +303,8 @@ test("start over restores current code and progress without changing other lesso
 
 test('tips preserve edits, support deep links and show module-specific queue order', async ({ page }) => {
   await page.goto('/');
+  await page.evaluate(() => localStorage.setItem('nodejs-for-golang-developers:last', JSON.stringify('05-execution')));
+  await page.reload();
   const editor = page.locator('.node .cm-content');
   await editor.fill('console.log("keep edit")');
   await page.getByRole('button', {name:'async / await', exact:true}).click();
@@ -335,7 +337,7 @@ test('Tips breadcrumb opens an alphabetical drawer index and returns to details'
   await dialog.getByRole('button',{name:'TIPS',exact:true}).click();
   await expect(dialog.getByRole('heading',{name:'全部 Tips',exact:true})).toBeVisible();
   const index = dialog.getByRole('navigation',{name:'Tips 目录'});
-  await expect(index.locator('strong')).toHaveText(['Arrow functions and declarations','async / await','ESM / CommonJS','Microtasks, nextTick and timers','Promise / resolve / then']);
+  await expect(index.locator('strong')).toHaveText(['Arrow functions and declarations','async / await','Declarations and scope','ESM / CommonJS','Microtasks, nextTick and timers','Promise / resolve / then','Shallow and deep copies','Values and object references']);
   await index.getByRole('button',{name:'Promise / resolve / then',exact:true}).click();
   await expect(dialog.getByRole('heading',{name:'Promise / resolve / then',exact:true})).toBeVisible();
   await dialog.getByRole('button',{name:'TIPS',exact:true}).click();
@@ -345,4 +347,14 @@ test('Tips breadcrumb opens an alphabetical drawer index and returns to details'
   await page.getByLabel('语言 / Language').selectOption('en');
   await page.goto('/#tip=all');
   await expect(dialog.getByRole('heading',{name:'All Tips',exact:true})).toBeVisible();
+});
+
+test('values lesson links only relevant concepts', async ({page}) => {
+  await page.goto('/');
+  await page.evaluate(() => localStorage.setItem('nodejs-for-golang-developers:last', JSON.stringify('03-values')));
+  await page.reload();
+  const bar=page.locator('.tips-bar');
+  await expect(bar.getByRole('button')).toHaveText(['Tips','变量声明与作用域','值与对象引用','浅复制与深复制']);
+  await bar.getByRole('button',{name:'变量声明与作用域'}).click();
+  await expect(page.getByRole('dialog')).toContainText('暂时性死区');
 });

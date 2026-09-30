@@ -1,6 +1,24 @@
 import React, { useEffect, useRef, useState } from "react";
 
 const tips = [
+  { id: 'variables', title: ['变量声明与作用域', 'Declarations and scope'],
+    intro: ['优先用 const；需要重新赋值时用 let。两者都有块级作用域。', 'Use const by default and let when reassignment is needed. Both are block-scoped.'],
+    code: 'const user = { name: "Ada" };\nuser.name = "Lin"; // allowed: mutate object\n// user = {};     // error: reassign const\n\nlet count = 0;\ncount += 1;\nif (true) {\n  let inside = 1;\n  var outside = 2;\n}\nconsole.log(outside); // 2\n// console.log(inside); // ReferenceError',
+    go: ['Go 的 := 和 var 也声明变量，但 Go const 是常量；JS const 约束的是变量绑定，不保证对象内容不变。', 'Go also declares variables with := and var, but Go const declares constants; JS const prevents rebinding, not object mutation.'],
+    trap: ['var 没有块级作用域，通常属于所在函数作用域；它允许重复声明，声明前读取可能得到 undefined。let/const 在初始化前不可访问（暂时性死区）。顶层规则还取决于脚本或模块环境。', 'var is not block-scoped and usually belongs to its enclosing function. It permits redeclaration and can read as undefined before its declaration. let/const cannot be accessed before initialization (the temporal dead zone). Top-level rules also depend on script or module context.'],
+    url: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Grammar_and_types' },
+  { id: 'references', title: ['值与对象引用', 'Values and object references'],
+    intro: ['赋值和传参都传递值；对于对象，这个值让两个变量指向同一个对象。', 'Assignment and arguments pass values. For objects, that value lets two variables refer to the same object.'],
+    code: 'let a = 1;\nlet b = a;\nb = 2;\nconsole.log(a); // 1\n\nconst first = { score: 1 };\nconst second = first;\nsecond.score = 2;\nconsole.log(first.score); // 2\nconsole.log(first === second); // true',
+    go: ['Go 结构体赋值复制结构体；JS 对象赋值不会复制对象内容。Go map、slice 也可能共享底层数据，不能概括成 Go 全复制、JS 全引用。', 'Go struct assignment copies the struct; JS object assignment does not copy object contents. Go maps and slices can also share underlying data.'],
+    trap: ['对象参数的属性修改能被调用方看到，但给参数重新赋值不会重绑调用方变量。两个内容相同的新对象，=== 也为 false。', 'Mutating a parameter object is visible to the caller, but reassigning the parameter does not rebind the caller’s variable. Two separate objects with identical contents are still unequal with ===.'],
+    url: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Working_with_objects' },
+  { id: 'copying', title: ['浅复制与深复制', 'Shallow and deep copies'],
+    intro: ['展开运算符只复制第一层；嵌套对象仍然共享。', 'Object spread copies only the first level; nested objects remain shared.'],
+    code: 'const original = { profile: { name: "Ada" } };\nconst shallow = { ...original };\nshallow.profile.name = "Lin";\nconsole.log(original.profile.name); // Lin\n\nconst deep = structuredClone(original);\ndeep.profile.name = "Grace";\nconsole.log(original.profile.name); // Lin',
+    go: ['Go 结构体里的指针、slice、map 字段也可能继续共享数据；复制外层不意味着所有层都独立。', 'Pointers, slices and maps inside copied Go structs may still share data. Copying the outer container does not make every level independent.'],
+    trap: ['structuredClone 适合支持克隆的数据，不是任意对象都能复制，例如函数不能克隆。JSON 序列化往返也不是通用深复制，会丢失或改变某些值。', 'structuredClone works for cloneable data, not arbitrary objects: functions cannot be cloned. A JSON round trip is not a universal deep copy and can lose or change values.'],
+    url: 'https://developer.mozilla.org/en-US/docs/Web/API/Window/structuredClone' },
   { id: 'functions', title: ['箭头函数与函数声明', 'Arrow functions and declarations'],
     intro: ['同一个问候函数可以有两种写法，但两种函数的语义不完全相同。', 'A greeting function can use either syntax, but the two forms have different semantics.'],
     code: 'const greet = (name) => `hello ${name}`;\n\n/* Alternative — replace the line above:\nfunction greet(name) {\n  return `hello ${name}`;\n}\n*/',
@@ -33,6 +51,7 @@ const tips = [
     url: 'https://nodejs.org/api/packages.html#determining-module-system' }
 ];
 const related = {
+  '03-values': ['variables', 'references', 'copying'],
   '04-modules': ['functions', 'modules'], '05-execution': ['promise', 'await', 'queues'],
   '06-collections': ['functions'], '08-errors': ['promise', 'await'],
   '09-typescript': ['functions', 'modules'], '14-files': ['await'],
@@ -61,7 +80,7 @@ export default function Tips({ lesson, locale }) {
   function close() {history.replaceState(null, '', `${location.pathname}${location.search}`); setSelected(null);}
   const tip = tips.find(t => t.id === selected);
   const text = a => a[en ? 1 : 0];
-  return <><div className="tips-bar"><strong>Tips</strong>{(related[lesson.id] || ['modules', 'await']).map(id => {const t = tips.find(t => t.id === id);return <button key={id} onClick={() => open(id)}>{text(t.title)}</button>;})}</div>
+  return <><div className="tips-bar"><button onClick={() => open('all')}>Tips</button>{(related[lesson.id] || []).map(id => {const t = tips.find(t => t.id === id);return <button key={id} onClick={() => open(id)}>{text(t.title)}</button>;})}</div>
     <dialog ref={dialog} className="tips-drawer" aria-label={en ? 'Knowledge tips' : '知识 Tips'} onCancel={close}>
       <button className="tips-close" onClick={close}>{en ? 'Close' : '关闭'} ×</button>
       {selected === 'all' && <><h2>{en ? 'All Tips' : '全部 Tips'}</h2><p>{en ? 'English title · A–Z' : '按英文标题 A–Z 排序'}</p><nav className="tips-index" aria-label={en ? 'Tips index' : 'Tips 目录'}>{[...tips].sort((a,b) => a.title[1].localeCompare(b.title[1], 'en')).map(t => <button key={t.id} onClick={() => open(t.id)}><strong>{t.title[1]}</strong>{!en && t.title[0] !== t.title[1] && <span>{t.title[0]}</span>}</button>)}</nav></>}
