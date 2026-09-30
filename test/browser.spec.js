@@ -308,7 +308,8 @@ test('tips preserve edits, support deep links and show module-specific queue ord
   await page.getByRole('button', {name:'async / await', exact:true}).click();
   const dialog = page.getByRole('dialog');
   await expect(dialog).toBeVisible();
-  await dialog.getByRole('button', {name:'微任务、nextTick 与定时器',exact:true}).click();
+  await dialog.getByRole('button', {name:'TIPS',exact:true}).click();
+  await dialog.getByRole('button', {name:/Microtasks, nextTick and timers/}).click();
   for(let i=0;i<6;i++) await dialog.getByRole('button',{name:'下一步',exact:true}).click();
   await expect(dialog.locator('[aria-live]')).toHaveText('A → B → promise → microtask → nextTick → timer');
   await dialog.getByLabel('模块模式').selectOption('CommonJS');
