@@ -1,4 +1,14 @@
 import { test, expect } from "@playwright/test";
+import { lessons } from "../curriculum.js";
+const one = String(Math.round(100 / lessons.length));
+const two = String(Math.round(200 / lessons.length));
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => {
+    if (window !== window.top) return;
+    if (!localStorage.getItem("go2node:last"))
+      localStorage.setItem("go2node:last", JSON.stringify("01-http-server"));
+  });
+});
 
 test("edit, run, switch files and topics, persist learning progress without external requests", async ({
   page,
@@ -23,13 +33,10 @@ test("edit, run, switch files and topics, persist learning progress without exte
   await expect(node.locator(".output")).toContainText(
     'GET /hello → 200 {"message":"hello"}',
   );
-  await expect(page.getByLabel("已开放子项进度")).toHaveAttribute(
-    "value",
-    "50",
-  );
-  await expect(page.getByLabel("阶段进度", { exact: true })).toHaveText(
-    "1 / 2 · 50%",
-  );
+  await expect(page.getByLabel("已开放子项进度")).toHaveAttribute("value", one);
+  await expect(
+    page.locator(".stage.active").getByLabel("阶段进度", { exact: true }),
+  ).toHaveText("1 / 7 · 14%");
   await node.getByRole("button", { name: "demo.js", exact: true }).click();
   await expect(node.locator(".cm-content")).toContainText("createServer");
   await node.getByRole("button", { name: "main.js", exact: true }).click();
@@ -38,24 +45,18 @@ test("edit, run, switch files and topics, persist learning progress without exte
   await expect(node.locator(".output")).toContainText("changed example");
   await page.reload();
   await expect(node.locator(".cm-content")).toContainText("changed example");
-  await page.getByRole("button", { name: /01B/ }).click();
+  await page.getByRole("button", { name: /路径与路由|Paths and routing/ }).click();
   await page.getByRole("button", { name: "运行 Go", exact: true }).click();
   await expect(page.locator(".go .output")).toContainText(
     "GET /missing → 404",
     { timeout: 15_000 },
   );
-  await expect(page.getByLabel("已开放子项进度")).toHaveAttribute(
-    "value",
-    "100",
-  );
+  await expect(page.getByLabel("已开放子项进度")).toHaveAttribute("value", two);
   await page.reload();
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
     "路径与路由",
   );
-  await expect(page.getByLabel("已开放子项进度")).toHaveAttribute(
-    "value",
-    "100",
-  );
+  await expect(page.getByLabel("已开放子项进度")).toHaveAttribute("value", two);
   expect(errors).toEqual([]);
   expect(external).toEqual([]);
 });
@@ -64,7 +65,7 @@ test("malformed local cache cannot crash the editor or progress", async ({
 }) => {
   await page.addInitScript(() => {
     localStorage.setItem("go2node:done", "{}");
-    localStorage.setItem("go2node:last", '"removed-lesson"');
+    localStorage.setItem("go2node:last", '"01-http-server"');
     localStorage.setItem(
       "go2node:files:01-http-server:node",
       '{"/main.js":{"code":42}}',
@@ -87,10 +88,7 @@ test("running broken code still records learning; mobile layout stays inside the
   await page.locator(".node .cm-content").fill("invalid code {{{");
   await page.getByRole("button", { name: "运行 Node.js" }).click();
   await expect(page.locator(".node .output")).toContainText("SyntaxError");
-  await expect(page.getByLabel("已开放子项进度")).toHaveAttribute(
-    "value",
-    "50",
-  );
+  await expect(page.getByLabel("已开放子项进度")).toHaveAttribute("value", one);
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= window.innerWidth,
@@ -110,7 +108,7 @@ test("language switch translates content and persists without resetting code, ou
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
     "A minimal HTTP server",
   );
-  await expect(page.locator(".planned-item")).toHaveCount(3);
+  await expect(page.locator(".planned-item")).toHaveCount(0);
   await expect(page.locator(".breadcrumb")).toContainText("Node backend");
   await expect(page.getByRole("button", { name: "Run Node.js" })).toBeVisible();
   await expect(
@@ -120,12 +118,12 @@ test("language switch translates content and persists without resetting code, ou
   await expect(page.locator(".node .output")).toContainText("你好 / hello");
   await expect(page.getByLabel("Available items")).toHaveAttribute(
     "value",
-    "50",
+    one,
   );
   await page.reload();
   await expect(page.getByLabel("语言 / Language")).toHaveValue("en");
   await expect(page.locator(".node .cm-content")).toContainText("你好 / hello");
-  await page.getByRole("button", { name: /01B/ }).click();
+  await page.getByRole("button", { name: /路径与路由|Paths and routing/ }).click();
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
     "Paths and routing",
   );
@@ -228,4 +226,54 @@ test("invalid package JSON remains editable after reload", async ({ page }) => {
     .getByRole("button", { name: "package.json", exact: true })
     .click();
   await expect(page.locator(".node .cm-content")).toContainText("{broken");
+});
+
+test("frontend React preview is interactive, isolated and works without external services", async ({
+  page,
+}) => {
+  const errors = [];
+  page.on("pageerror", (e) => errors.push(e.message));
+  await page.route("**/*", (route) =>
+    route.request().url().startsWith("http://127.0.0.1:4317")
+      ? route.continue()
+      : route.abort(),
+  );
+  await page.goto("/");
+  await page.locator(".stage-title").filter({ hasText: "前端" }).click();
+  await page.getByRole("button", { name: /React 与 JSX/ }).click();
+  await page.getByRole("button", { name: "运行 浏览器", exact: true }).click();
+  const frame = page.frameLocator("iframe");
+  await expect(frame.locator("output")).toHaveText("0", { timeout: 15000 });
+  await frame.getByRole("button", { name: "Add / 加一" }).click();
+  await expect(frame.locator("output")).toHaveText("1");
+  await expect(page.locator("iframe")).toHaveAttribute(
+    "sandbox",
+    "allow-scripts",
+  );
+  await page.getByLabel("语言 / Language").selectOption("en");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+    "React and JSX",
+  );
+  await expect(frame.locator("output")).toHaveText("1");
+  await page.setViewportSize({width:390,height:844});
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  expect(errors).toEqual([]);
+});
+
+test("full-stack preview renders an actual server response and TS runs", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator(".stage-title").filter({ hasText: "全栈整合" }).click();
+  await page.getByRole("button", { name: /服务端渲染/ }).click();
+  await page.getByRole("button", { name: "运行 Node.js" }).click();
+  await expect(page.locator(".node .output")).toContainText("GET / → 200");
+  await expect(page.frameLocator(".node iframe").locator("p")).toHaveText(
+    "Ada",
+  );
+  await page.locator(".stage-title").filter({ hasText: "JS / TS" }).click();
+  await page.getByRole("button", { name: /TypeScript 类型与运行时/ }).click();
+  await expect(page.locator(".node .cm-content")).toContainText("type User");
+  await page.getByRole("button", { name: "运行 Node.js" }).click();
+  await expect(page.locator(".node .output")).toContainText("hello Ada");
 });

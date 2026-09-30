@@ -258,3 +258,45 @@ test("remote binding refuses startup without an access token", async () => {
   assert.notEqual(code, 0);
   assert.match(errors, /ACCESS_TOKEN/);
 });
+
+test("every curriculum item has a working implementation and translated content", async () => {
+  const { lessons, stages, lessonEnglish } = await import("../curriculum.js");
+  assert.equal(lessons.length, 23);
+  assert.equal(new Set(lessons.map((item) => item.id)).size, lessons.length);
+  for (const stage of stages)
+    assert.ok(lessons.some((item) => item.stage === stage.id));
+  for (const lesson of lessons) {
+    if (!["01-http-server", "02-routing"].includes(lesson.id)) {
+      for (const text of [
+        lesson.title,
+        lesson.description,
+        lesson.observe,
+        lesson.exercise,
+        ...lesson.differences,
+      ])
+        assert.ok(lessonEnglish[text], `Missing translation: ${text}`);
+    }
+    for (const language of lesson.mode === "browser"
+      ? ["browser"]
+      : ["go", "node"]) {
+      const response = await run({
+        lesson: lesson.id,
+        language,
+        files: await files(lesson.id, language),
+      });
+      assert.equal(response.status, 200, `${lesson.id}/${language}`);
+      const result = await response.json();
+      assert.equal(
+        result.code,
+        0,
+        `${lesson.id}/${language}: ${JSON.stringify(result)}`,
+      );
+      assert.ok(result.stdout.trim(), `${lesson.id}/${language} has no output`);
+      if (lesson.preview || lesson.mode === "browser")
+        assert.ok(
+          result.preview?.includes("<"),
+          `${lesson.id}/${language} has no preview`,
+        );
+    }
+  }
+});

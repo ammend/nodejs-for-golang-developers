@@ -1,5 +1,13 @@
+import { lessons } from "./curriculum.js";
 import http from "node:http";
-import { readFile, readdir, mkdtemp, writeFile, rm } from "node:fs/promises";
+import {
+  readFile,
+  readdir,
+  mkdtemp,
+  writeFile,
+  rm,
+  stat,
+} from "node:fs/promises";
 import { spawn } from "node:child_process";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -50,8 +58,13 @@ async function body(req) {
 async function validate(data) {
   if (
     !data ||
-    !["01-http-server", "02-routing"].includes(data.lesson) ||
-    !["go", "node"].includes(data.language)
+    !lessons.some(
+      (lesson) =>
+        lesson.id === data.lesson &&
+        (lesson.mode === "browser"
+          ? data.language === "browser"
+          : ["go", "node"].includes(data.language)),
+    )
   ) {
     throw fail(400, "未知主题或语言");
   }
@@ -96,15 +109,32 @@ async function execute(data, res) {
     );
     Object.assign(env, { GOTOOLCHAIN: "local", GOWORK: "off" });
     const started = Date.now();
-    return await new Promise((resolve) => {
+    const lesson = lessons.find((item) => item.id === data.lesson);
+    const result = await new Promise((resolve) => {
       const child =
         data.language === "go"
           ? spawn("go", ["run", "."], { cwd: dir, env, detached: true })
-          : spawn(process.execPath, ["main.js"], {
-              cwd: dir,
-              env,
-              detached: true,
-            });
+          : spawn(
+              process.execPath,
+              data.language === "browser"
+                ? [
+                    path.join(root, "scripts/run-example.js"),
+                    "browser",
+                    lesson.entry,
+                  ]
+                : lesson.nodeEntry
+                  ? [
+                      path.join(root, "scripts/run-example.js"),
+                      "node",
+                      lesson.nodeEntry,
+                    ]
+                  : ["main.js"],
+              {
+                cwd: dir,
+                env,
+                detached: true,
+              },
+            );
       let stdout = "",
         stderr = "",
         bytes = 0,
@@ -147,6 +177,17 @@ async function execute(data, res) {
         });
       });
     });
+    if (result.code === 0 && (lesson.preview || lesson.mode === "browser")) {
+      try {
+        const file = path.join(dir, "preview.html");
+        if ((await stat(file)).size > 1024 * 1024)
+          result.reason = "预览文件超过 1 MB";
+        else result.preview = await readFile(file, "utf8");
+      } catch (error) {
+        if (error.code !== "ENOENT") throw error;
+      }
+    }
+    return result;
   } finally {
     await rm(dir, { recursive: true, force: true });
   }

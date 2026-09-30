@@ -510,3 +510,73 @@ html[lang="en"] .output-label {
 .stage-items:empty {
   display: none;
 }
+.stage-title {
+  cursor: pointer;
+  list-style: none;
+}
+.stage-title::before {
+  content: "›";
+  color: #738594;
+}
+.stage[open] > .stage-title::before {
+  content: "⌄";
+}
+.stage-title:focus-visible {
+  outline: 3px solid #007eaa;
+  outline-offset: 3px;
+}
+.sidebar {
+  position: sticky;
+  top: 0;
+  max-height: 100vh;
+  overflow: auto;
+}
+.editors.single {
+  display: block;
+}
+.preview {
+  padding: 16px;
+  background: #f8fafb;
+  border-top: 1px solid #d6e1e8;
+}
+.preview iframe {
+  display: block;
+  width: 100%;
+  height: 300px;
+  background: white;
+  border: 1px solid #d6e1e8;
+}
+.preview p {
+  font-size: 13px;
+  color: #647b8b;
+}
+.workbench.browser {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+.browser .workbench-head {
+  grid-column: 1 / -1;
+}
+.browser .preview {
+  grid-column: 2;
+  grid-row: 2 / 4;
+  border-left: 1px solid #d6e1e8;
+}
+.browser .preview iframe {
+  height: 510px;
+}
+.browser .output {
+  grid-column: 1;
+}
+@media (max-width: 800px) {
+  .sidebar {
+    position: static;
+    max-height: none;
+  }
+  .workbench.browser {
+    display: block;
+  }
+  .browser .preview iframe {
+    height: 350px;
+  }
+}

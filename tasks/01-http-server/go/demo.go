@@ -14,10 +14,14 @@ func demonstrate(handler http.Handler, paths []string) {
 	defer server.Close()
 	for _, path := range paths {
 		response, err := http.Get(server.URL + path)
-		if err != nil { panic(err) }
+		if err != nil {
+			panic(err)
+		}
 		body, err := io.ReadAll(response.Body)
 		response.Body.Close()
-		if err != nil { panic(err) }
+		if err != nil {
+			panic(err)
+		}
 		fmt.Printf("GET %s → %d %s\n", path, response.StatusCode, strings.TrimSpace(string(body)))
 	}
 }

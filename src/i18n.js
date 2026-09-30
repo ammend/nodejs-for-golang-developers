@@ -1,5 +1,15 @@
+import { lessonEnglish } from "../curriculum.js";
 // Keep Chinese source text as keys; no runtime dependency or duplicated lesson data.
 const en = {
+  ...lessonEnglish,
+  页面预览: "Page preview",
+  浏览器: "Browser",
+  "先运行，再与页面交互。": "Run first, then interact with the page.",
+  关键概念: "Key concepts",
+  "六阶段，循序渐进。": "Six stages, one step at a time.",
+  "预览文件超过 1 MB": "Preview exceeds 1 MB",
+  代码与学习位置保存在此浏览器: "Code and progress stay in this browser",
+  当前仅在本页保留代码与进度: "Code and progress stay in this page only",
   服务正在关闭: "The server is shutting down",
   "无法保存到此浏览器，当前编辑仅保留在本页，刷新后可能丢失。":
     "Cannot save in this browser. Edits stay in this page only and may be lost on refresh.",

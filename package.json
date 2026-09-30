@@ -15,6 +15,7 @@
   "dependencies": {
     "@codemirror/lang-go": "6.0.1",
     "@codesandbox/sandpack-react": "2.20.0",
+    "esbuild": "0.28.2",
     "react": "19.3.0",
     "react-dom": "19.3.0"
   },

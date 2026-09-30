@@ -56,6 +56,25 @@ function save(key, value) {
   }
 }
 
+function Preview({ html, t }) {
+  const policy = `<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; connect-src 'none';">`;
+  const errors = `<script>function showError(text){const pre=document.createElement('pre');pre.textContent=text;pre.style.color='crimson';(document.body||document.documentElement).append(pre)};addEventListener('error',e=>showError(e.message));addEventListener('unhandledrejection',e=>showError(String(e.reason)));</script>`;
+  return (
+    <div className="preview">
+      <h2>{t("页面预览")}</h2>
+      {html ? (
+        <iframe
+          title={t("页面预览")}
+          sandbox="allow-scripts"
+          srcDoc={policy + errors + html}
+        />
+      ) : (
+        <p>{t("先运行，再与页面交互。")}</p>
+      )}
+    </div>
+  );
+}
+
 function Workbench({ lesson, language, onRun, token, needsToken, t }) {
   const { sandpack } = useSandpack();
   const [result, setResult] = useState(null);
@@ -185,6 +204,9 @@ function Workbench({ lesson, language, onRun, token, needsToken, t }) {
           )}
         </pre>
       </div>
+      {(language.id === "browser" || lesson.preview) && (
+        <Preview html={result?.preview} t={t} />
+      )}
     </section>
   );
 }
@@ -192,7 +214,10 @@ function Editor(props) {
   // Setup identity is stable across progress, language and token changes.
   const [setup] = useState(() => {
     const files = lessonFiles(props.lesson.id, props.language.id);
-    const entry = props.language.id === "go" ? "/main.go" : "/main.js";
+    const entry =
+      props.language.id === "go"
+        ? "/main.go"
+        : `/${props.language.id === "browser" ? props.lesson.entry : props.lesson.nodeEntry || "main.js"}`;
     return {
       files,
       customSetup: { environment: "static", entry },
@@ -243,6 +268,20 @@ function App() {
   const [needsToken, setNeedsToken] = useState(null);
   const [connectionError, setConnectionError] = useState("");
   const lesson = lessons.find((item) => item.id === selected) || lessons[0];
+  const editors =
+    lesson.mode === "browser"
+      ? [
+          {
+            name: t("浏览器"),
+            id: "browser",
+            detail: "HTML / CSS / JavaScript",
+          },
+        ]
+      : languages.map((item) =>
+          item.id === "node" && lesson.nodeEntry
+            ? { ...item, detail: "Node.js · TypeScript" }
+            : item,
+        );
   function progress(items) {
     const count = items.filter((item) => done.includes(item.id)).length;
     return `${count} / ${items.length} · ${items.length ? Math.round((count / items.length) * 100) : 0}%`;
@@ -299,17 +338,18 @@ function App() {
         </div>
         <nav aria-label={t("学习阶段")}>
           {stages.map((stage, index) => (
-            <div
+            <details
               className={`stage ${stage.id === lesson.stage ? "active" : ""}`}
               key={stage.id}
+              open={stage.id === lesson.stage}
             >
-              <div className="stage-title">
+              <summary className="stage-title">
                 <span className="stage-number">0{index + 1}</span>
                 <strong>{t(stage.title)}</strong>
                 {!lessons.some((l) => l.stage === stage.id) && (
                   <small>{t("待开放")}</small>
                 )}
-              </div>
+              </summary>
               <p>{t(stage.summary)}</p>
               {lessons.some((l) => l.stage === stage.id) && (
                 <div className="stage-progress" aria-label={t("阶段进度")}>
@@ -343,13 +383,13 @@ function App() {
                   </div>
                 ))}
               </div>
-            </div>
+            </details>
           ))}
         </nav>
         <p className="sidebar-note">
           {t("点运行即计入进度。")}
           <br />
-          {t("完整路线逐步开放。")}
+          {t("六阶段，循序渐进。")}
         </p>
       </aside>
       <main>
@@ -371,7 +411,10 @@ function App() {
         </div>
         <header className="page-head">
           <div>
-            <p className="eyebrow">GO → NODE / HTTP</p>
+            <p className="eyebrow">
+              GO → NODE /{" "}
+              {t(stages.find((stage) => stage.id === lesson.stage).title)}
+            </p>
             <h1>{t(lesson.title)}</h1>
             <p>{t(lesson.description)}</p>
           </div>
@@ -403,8 +446,8 @@ function App() {
             <small>{t("仅保存在当前页面内存中")}</small>
           </label>
         )}
-        <div className="editors">
-          {languages.map((language) => (
+        <div className={`editors ${lesson.mode === "browser" ? "single" : ""}`}>
+          {editors.map((language) => (
             <Editor
               key={`${lesson.id}:${language.id}`}
               lesson={lesson}
@@ -418,7 +461,9 @@ function App() {
         </div>
         <div className="notes">
           <section>
-            <h2>{t("把两种写法连起来")}</h2>
+            <h2>
+              {t(lesson.mode === "browser" ? "关键概念" : "把两种写法连起来")}
+            </h2>
             <ul>
               {lesson.differences.map((text) => (
                 <li key={text}>{t(text)}</li>
@@ -434,8 +479,8 @@ function App() {
         <footer>
           {t(
             saveFailed
-              ? "当前仅在本页保留代码与进度 · 示例仅使用标准库"
-              : "代码与学习位置保存在此浏览器 · 示例仅使用标准库",
+              ? "当前仅在本页保留代码与进度"
+              : "代码与学习位置保存在此浏览器",
           )}{" "}
           <a
             href="https://github.com/miguelmota/golang-for-nodejs-developers"
