@@ -54,6 +54,7 @@ export const lessons = [
     differences: [
       "Go 同包文件共享包作用域；JS 通过 export/import 显式连接模块。",
       "Node 示例使用 ESM，package.json 中声明 type: module。",
+      "函数声明可在声明前调用；const 箭头函数须在初始化后调用。箭头函数没有自己的 this，也不能用作构造函数。",
     ],
     exercise: "给 greet 增加一个问候语参数。",
   },
@@ -356,6 +357,8 @@ export const lessonEnglish = {
     "Go struct assignment copies fields; JS object assignment shares a reference.",
   "展开运算符只做浅复制，嵌套对象仍可能共享。":
     "Object spread makes a shallow copy; nested objects may still be shared.",
+  "函数声明可在声明前调用；const 箭头函数须在初始化后调用。箭头函数没有自己的 this，也不能用作构造函数。":
+    "Function declarations can be called before their declaration; const arrow functions must be initialized first. Arrow functions have no own this and cannot be constructors.",
   函数与模块: "Functions and modules",
   "把业务函数放进另一个文件。": "Move a business function into another file.",
   "修改函数实现，主文件调用结果随之变化。":
