@@ -575,3 +575,5 @@ html[lang="en"] .output-label {
     height: 350px;
   }
 }
+
+.restart { flex-shrink: 0; margin-left: 16px; padding: 8px 14px; border: 1px solid #cbd9e2; border-radius: 6px; background: white; color: #315568; cursor: pointer; }

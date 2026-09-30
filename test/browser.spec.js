@@ -277,3 +277,26 @@ test("full-stack preview renders an actual server response and TS runs", async (
   await page.getByRole("button", { name: "运行 Node.js" }).click();
   await expect(page.locator(".node .output")).toContainText("hello Ada");
 });
+
+test("start over restores current code and progress without changing other lessons", async ({ page }) => {
+  await page.goto("/");
+  await page.evaluate(() => {
+    localStorage.setItem("nodejs-for-golang-developers:done", JSON.stringify(["01-http-server", "02-routing"]));
+    localStorage.setItem("nodejs-for-golang-developers:files:02-routing:node", JSON.stringify({"/main.js": {code: "// keep me"}}));
+  });
+  await page.reload();
+  const node = page.getByRole("region", {name: "Node.js 编辑与运行"});
+  await node.locator(".cm-content").fill('console.log("modified")');
+  await node.getByRole("button", {name: "运行 Node.js"}).click();
+  await expect(node.locator(".output")).toContainText("modified");
+  await page.getByRole("button", {name: "重来", exact: true}).click();
+  await expect(node.locator(".cm-content")).toContainText("function handler");
+  await expect(node.locator(".output")).not.toContainText("modified");
+  await expect(page.getByLabel("已开放子项进度")).toHaveAttribute("value", one);
+  await page.reload();
+  await expect(node.locator(".cm-content")).toContainText("function handler");
+  expect(await page.evaluate(() => JSON.parse(localStorage.getItem("nodejs-for-golang-developers:done")))).toEqual(["02-routing"]);
+  expect(await page.evaluate(() => JSON.parse(localStorage.getItem("nodejs-for-golang-developers:files:02-routing:node"))["/main.js"].code)).toBe("// keep me");
+  await page.getByLabel("语言 / Language").selectOption("en");
+  await expect(page.getByRole("button", {name: "Start over", exact: true})).toBeVisible();
+});

@@ -264,6 +264,7 @@ function App() {
       ? value.filter((id) => lessons.some((item) => item.id === id))
       : [];
   });
+  const [resetVersion, setResetVersion] = useState(0);
   const [token, setToken] = useState("");
   const [needsToken, setNeedsToken] = useState(null);
   const [connectionError, setConnectionError] = useState("");
@@ -304,6 +305,15 @@ function App() {
   function choose(id) {
     setSelected(id);
     save("nodejs-for-golang-developers:last", id);
+  }
+  function restart() {
+    for (const language of editors) {
+      save(`nodejs-for-golang-developers:files:${lesson.id}:${language.id}`, lessonFiles(lesson.id, language.id));
+    }
+    const next = done.filter((id) => id !== lesson.id);
+    save("nodejs-for-golang-developers:done", next);
+    setDone(next);
+    setResetVersion((value) => value + 1);
   }
   function mark(id) {
     setDone((previous) => {
@@ -418,6 +428,9 @@ function App() {
             <h1>{t(lesson.title)}</h1>
             <p>{t(lesson.description)}</p>
           </div>
+          <button className="restart" onClick={restart} title={t("恢复本项默认代码、清空输出与进度")} >
+            {t("重来")}
+          </button>
         </header>
         <div className="observe">
           <strong>{t("观察什么")}</strong>
@@ -449,7 +462,7 @@ function App() {
         <div className={`editors ${lesson.mode === "browser" ? "single" : ""}`}>
           {editors.map((language) => (
             <Editor
-              key={`${lesson.id}:${language.id}`}
+              key={`${lesson.id}:${language.id}:${resetVersion}`}
               lesson={lesson}
               language={language}
               onRun={mark}
