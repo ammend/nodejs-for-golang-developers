@@ -94,7 +94,7 @@ function killGroup(child) {
   }
 }
 async function execute(data, res) {
-  const dir = await mkdtemp(path.join(tmpdir(), "go2node-"));
+  const dir = await mkdtemp(path.join(tmpdir(), "nodejs-for-golang-developers-"));
   try {
     await Promise.all(
       Object.entries(data.files).map(([name, code]) =>
@@ -257,7 +257,7 @@ server.on("error", (error) => {
 });
 server.listen(port, host, () =>
   console.log(
-    `go2node listening at http://${host.includes(":") ? `[${host}]` : host}:${server.address().port}`,
+    `nodejs-for-golang-developers listening at http://${host.includes(":") ? `[${host}]` : host}:${server.address().port}`,
   ),
 );
 for (const signal of ["SIGINT", "SIGTERM"])

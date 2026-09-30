@@ -176,7 +176,7 @@ test("missing project files are rejected and completed workspaces are removed", 
 test("two concurrent jobs enforce capacity; disconnect cancels jobs and releases slots", async () => {
   const { mkdtemp, rm } = await import("node:fs/promises");
   const { tmpdir } = await import("node:os");
-  const dir = await mkdtemp(`${tmpdir()}/go2node-test-`);
+  const dir = await mkdtemp(`${tmpdir()}/nodejs-for-golang-developers-test-`);
   const controllers = [new AbortController(), new AbortController()];
   const pending = [];
   async function until(check) {

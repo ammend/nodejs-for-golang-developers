@@ -1,5 +1,5 @@
 ---
-name: go2node-start
+name: nodejs-for-golang-developers-start
 description: 启动本仓库的 Go→Node 对照学习页面，检查依赖、构建、提供本机或远程访问地址并处理启动问题。用于启动学习工具，不用于生成课程或判分。
 ---
 

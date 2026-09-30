@@ -1,4 +1,4 @@
-# go2node
+# Node.js for Golang Developers
 
 **English** | [简体中文](README.zh-CN.md)
 
@@ -46,7 +46,7 @@ Click **Run** to record an item as studied—even if it errors. Code, language, 
 - [Sandpack](https://github.com/codesandbox/sandpack) editors; local Go/Node execution; esbuild for TS and browser examples. No external preview service or CDN.
 - Server runs have a **10-second timeout**, two-job limit, and bounded input/output. Browser preview scripts run in a sandboxed iframe; the server timeout does not stop browser loops.
 - TypeScript is transpiled, not type-checked. These are small learning examples, not production applications or a comprehensive language reference.
-- Content: [`curriculum.js`](curriculum.js) + [`tasks/`](tasks/). Startup skill: [`go2node-start`](skills/go2node-start/SKILL.md).
+- Content: [`curriculum.js`](curriculum.js) + [`tasks/`](tasks/). Startup skill: [`nodejs-for-golang-developers-start`](skills/nodejs-for-golang-developers-start/SKILL.md).
 
 ## Test
 

@@ -1,4 +1,4 @@
-# go2node
+# Node.js for Golang Developers
 
 [English](README.md) | **简体中文**
 
@@ -46,7 +46,7 @@ HOST=0.0.0.0 PORT=3000 ACCESS_TOKEN='your-random-token-at-least-24-characters' n
 - 复用 [Sandpack](https://github.com/codesandbox/sandpack) 编辑器，本地运行 Go/Node，esbuild 处理 TS 和浏览器示例；无需外部预览服务或 CDN。
 - 服务端执行限时 **10 秒**，最多两个并发任务，限制输入与输出大小。浏览器预览在隔离 iframe 中执行，服务端超时不能终止浏览器死循环。
 - TypeScript 只转译、不做类型检查。这些是小型学习示例，不是生产应用或完整语言百科。
-- 内容位于 [`curriculum.js`](curriculum.js) 与 [`tasks/`](tasks/)；启动 skill 为 [`go2node-start`](skills/go2node-start/SKILL.md)。
+- 内容位于 [`curriculum.js`](curriculum.js) 与 [`tasks/`](tasks/)；启动 skill 为 [`nodejs-for-golang-developers-start`](skills/nodejs-for-golang-developers-start/SKILL.md)。
 
 ## 测试
 

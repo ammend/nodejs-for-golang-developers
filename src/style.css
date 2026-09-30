@@ -46,16 +46,11 @@ a {
   border-right: 1px solid #d5e0e7;
 }
 .brand {
-  font-size: 30px;
+  font-size: 23px;
   font-weight: 800;
-  letter-spacing: -1.5px;
+  letter-spacing: -0.6px;
+  line-height: 1.2;
   text-decoration: none;
-}
-.brand > span {
-  color: #137e95;
-}
-.brand-dot {
-  font-size: 36px;
 }
 .tagline {
   font-size: 12px;
@@ -168,7 +163,7 @@ main {
   margin: 0 0 9px;
 }
 h1 {
-  font-size: 30px;
+  font-size: 23px;
   letter-spacing: -0.6px;
   margin: 0 0 10px;
 }

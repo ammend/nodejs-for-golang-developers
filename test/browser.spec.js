@@ -5,8 +5,8 @@ const two = String(Math.round(200 / lessons.length));
 test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => {
     if (window !== window.top) return;
-    if (!localStorage.getItem("go2node:last"))
-      localStorage.setItem("go2node:last", JSON.stringify("01-http-server"));
+    if (!localStorage.getItem("nodejs-for-golang-developers:last"))
+      localStorage.setItem("nodejs-for-golang-developers:last", JSON.stringify("01-http-server"));
   });
 });
 
@@ -64,10 +64,10 @@ test("malformed local cache cannot crash the editor or progress", async ({
   page,
 }) => {
   await page.addInitScript(() => {
-    localStorage.setItem("go2node:done", "{}");
-    localStorage.setItem("go2node:last", '"01-http-server"');
+    localStorage.setItem("nodejs-for-golang-developers:done", "{}");
+    localStorage.setItem("nodejs-for-golang-developers:last", '"01-http-server"');
     localStorage.setItem(
-      "go2node:files:01-http-server:node",
+      "nodejs-for-golang-developers:files:01-http-server:node",
       '{"/main.js":{"code":42}}',
     );
   });
@@ -213,7 +213,7 @@ test("pending settings cannot send an unauthenticated run or record progress", a
 test("invalid package JSON remains editable after reload", async ({ page }) => {
   await page.addInitScript(() =>
     localStorage.setItem(
-      "go2node:files:01-http-server:node",
+      "nodejs-for-golang-developers:files:01-http-server:node",
       JSON.stringify({ "/package.json": { code: "{broken" } }),
     ),
   );

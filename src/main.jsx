@@ -52,7 +52,7 @@ function save(key, value) {
     localStorage.setItem(key, JSON.stringify(value));
   } catch {
     storageFailed = true;
-    window.dispatchEvent(new Event("go2node:storage-error"));
+    window.dispatchEvent(new Event("nodejs-for-golang-developers:storage-error"));
   }
 }
 
@@ -81,7 +81,7 @@ function Workbench({ lesson, language, onRun, token, needsToken, t }) {
   const [busy, setBusy] = useState(false);
   const pending = useRef(null);
   useEffect(() => () => pending.current?.abort(), []);
-  const storageKey = `go2node:files:${lesson.id}:${language.id}`;
+  const storageKey = `nodejs-for-golang-developers:files:${lesson.id}:${language.id}`;
   const restored = useRef(false);
   useEffect(() => {
     if (!restored.current) {
@@ -243,23 +243,23 @@ function App() {
   useEffect(() => {
     const notify = () => setSaveFailed(true);
     if (storageFailed) notify();
-    window.addEventListener("go2node:storage-error", notify);
-    return () => window.removeEventListener("go2node:storage-error", notify);
+    window.addEventListener("nodejs-for-golang-developers:storage-error", notify);
+    return () => window.removeEventListener("nodejs-for-golang-developers:storage-error", notify);
   }, []);
   const [locale, setLocale] = useState(() =>
-    load("go2node:locale", "zh") === "en" ? "en" : "zh",
+    load("nodejs-for-golang-developers:locale", "zh") === "en" ? "en" : "zh",
   );
   const t = translator(locale);
   useEffect(() => {
-    save("go2node:locale", locale);
+    save("nodejs-for-golang-developers:locale", locale);
     document.documentElement.lang = locale === "en" ? "en" : "zh-CN";
-    document.title = `go2node · ${t("从熟悉，到会用。")}`;
+    document.title = `Node.js for Golang Developers · ${t("从熟悉，到会用。")}`;
   }, [locale]);
   const [selected, setSelected] = useState(() =>
-    load("go2node:last", lessons[0].id),
+    load("nodejs-for-golang-developers:last", lessons[0].id),
   );
   const [done, setDone] = useState(() => {
-    const value = load("go2node:done", []);
+    const value = load("nodejs-for-golang-developers:done", []);
     return Array.isArray(value)
       ? value.filter((id) => lessons.some((item) => item.id === id))
       : [];
@@ -303,12 +303,12 @@ function App() {
   }, []);
   function choose(id) {
     setSelected(id);
-    save("go2node:last", id);
+    save("nodejs-for-golang-developers:last", id);
   }
   function mark(id) {
     setDone((previous) => {
       const next = [...new Set([...previous, id])];
-      save("go2node:done", next);
+      save("nodejs-for-golang-developers:done", next);
       return next;
     });
   }
@@ -316,7 +316,7 @@ function App() {
     <div className="app">
       <aside className="sidebar">
         <a className="brand" href="/">
-          go<span>2</span>node<span className="brand-dot">.</span>
+          Node.js for Golang Developers
         </a>
         <p className="tagline">{t("从熟悉，到会用。")}</p>
         <div className="progress">
