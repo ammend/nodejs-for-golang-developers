@@ -337,7 +337,7 @@ test('Tips breadcrumb opens an alphabetical drawer index and returns to details'
   await dialog.getByRole('button',{name:'TIPS',exact:true}).click();
   await expect(dialog.getByRole('heading',{name:'全部 Tips',exact:true})).toBeVisible();
   const index = dialog.getByRole('navigation',{name:'Tips 目录'});
-  await expect(index.locator('strong')).toHaveText(['Array methods: filter / map / reduce','Arrow functions and declarations','async / await','Declarations and scope','Error and try / catch / finally','ESM / CommonJS','Iteration: Go range and JS loops','Microtasks, nextTick and timers','Promise / resolve / then','Runtime: V8, Node, libuv and Go GMP','Shallow and deep copies','Values and object references']);
+  await expect(index.locator('strong')).toHaveText(['Array methods: filter / map / reduce','Arrow functions and declarations','async / await','Declarations and scope','Error and try / catch / finally','ESM / CommonJS','Iteration: Go range and JS loops','JSON: parse and stringify','Microtasks, nextTick and timers','Promise / resolve / then','Runtime: V8, Node, libuv and Go GMP','Shallow and deep copies','Values and object references']);
   await index.getByRole('button',{name:'Promise / resolve / then',exact:true}).click();
   await expect(dialog.getByRole('heading',{name:'Promise / resolve / then',exact:true})).toBeVisible();
   await dialog.getByRole('button',{name:'TIPS',exact:true}).click();
@@ -375,4 +375,17 @@ test('collections and control flow expose focused tips and matching execution', 
   await expect(page.locator('.go .output')).toContainText('first Ada');
   await page.locator('.tips-bar').getByRole('button',{name:'Go range 与 JS 遍历'}).click();
   await expect(page.getByRole('dialog')).toContainText('继承属性');
+});
+
+test('JSON lesson links to bilingual serialization tips', async ({page}) => {
+  await page.goto('/');
+  await page.evaluate(() => localStorage.setItem('nodejs-for-golang-developers:last', JSON.stringify('07-json')));
+  await page.reload();
+  await page.locator('.tips-bar').getByRole('button',{name:'JSON：解析与序列化'}).click();
+  await expect(page.getByRole('dialog')).toContainText('JSON.parse');
+  await expect(page.getByRole('dialog')).toContainText('仍需校验');
+  await page.keyboard.press('Escape');
+  await page.getByLabel('语言 / Language').selectOption('en');
+  await page.locator('.tips-bar').getByRole('button',{name:'JSON: parse and stringify'}).click();
+  await expect(page.getByRole('dialog')).toContainText('validation is still needed');
 });

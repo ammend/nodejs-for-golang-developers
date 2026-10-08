@@ -2,6 +2,27 @@ import React, { useEffect, useRef, useState } from "react";
 
 const tips = [
 {
+  "id": "json",
+  "title": [
+    "JSON：解析与序列化",
+    "JSON: parse and stringify"
+  ],
+  "intro": [
+    "JSON 是数据的文本格式。JSON.parse 把文本解析成 JS 值；JSON.stringify 把可表示的数据编码成文本。",
+    "JSON is a text format for data. JSON.parse turns text into a JS value; JSON.stringify encodes representable data as text."
+  ],
+  "code": "const text = '{\"name\":\"Ada\",\"age\":20}';\nconst user = JSON.parse(text);\nconsole.log(user.name); // Ada\n\nconsole.log(JSON.stringify(user));\nconsole.log(JSON.stringify(user, null, 2)); // indent: 2 spaces\nconsole.log(JSON.stringify(user, [\"name\"])); // {\"name\":\"Ada\"}\n\n// replacer: transform / omit fields while encoding\nconst safe = JSON.stringify({name: \"Ada\", secret: \"x\"},\n  (key, value) => key === \"secret\" ? undefined : value);\nconsole.log(safe);\n\n// reviver: transform fields while decoding\nconst result = JSON.parse('{\"age\":\"20\"}',\n  (key, value) => key === \"age\" ? Number(value) : value);\nconsole.log(typeof result.age); // number\n\ntry { JSON.parse(\"not JSON\"); }\ncatch (error) { console.log(error.name); } // SyntaxError",
+  "go": [
+    "对应 Go encoding/json 的 Marshal / Unmarshal。Go 可解码到结构体并检查类型；JS parse 只保证 JSON 语法正确，不保证业务字段和类型正确，仍需校验。JS 解析大整数可能丢精度；Go 解码到 any 时默认数字为 float64，可用 Decoder.UseNumber。",
+    "Compare Go encoding/json Marshal / Unmarshal. Go can decode into typed structs; JS parse checks JSON syntax, not application fields or types, so validation is still needed. Large integers can lose precision in JS; Go decoding into any defaults to float64, with Decoder.UseNumber available."
+  ],
+  "trap": [
+    "JSON 键和字符串必须用双引号，不支持注释或尾逗号。对象属性中的 undefined/函数会被忽略，在数组里通常变成 null；NaN/Infinity 编码为 null。Date 通常经 toJSON 变成字符串，parse 不会自动还原日期。默认 stringify 遇到 BigInt 或循环引用会抛错，顶层 undefined 则返回 undefined。reviver 返回 undefined 会删除对应属性。JSON 往返不是通用深复制，也不能代替输入校验。",
+    "JSON keys and strings require double quotes; comments and trailing commas are invalid. Undefined/functions in object properties are omitted, while in arrays they generally become null; NaN/Infinity encode as null. Date typically uses toJSON to become a string; parse does not restore dates automatically. By default stringify throws on BigInt or cycles, while top-level undefined returns undefined. Returning undefined from a reviver deletes that property. A JSON round trip is neither a general deep clone nor input validation."
+  ],
+  "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON"
+},
+{
   "id": "runtime",
   "title": [
     "V8、Node、libuv 与 Go GMP",
@@ -145,6 +166,7 @@ const tips = [
     url: 'https://nodejs.org/api/packages.html#determining-module-system' }
 ];
 const related = {
+  '07-json': ['json', 'references', 'copying'],
   '03-values': ['variables', 'references', 'copying'],
   '04-modules': ['functions', 'modules'], '05-execution': ['runtime', 'promise', 'await', 'queues'],
   '24-control-flow': ['variables', 'iteration'],
