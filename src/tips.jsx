@@ -2,6 +2,27 @@ import React, { useEffect, useRef, useState } from "react";
 
 const tips = [
 {
+  "id": "typescript",
+  "title": [
+    "TypeScript 与 JavaScript",
+    "TypeScript and JavaScript"
+  ],
+  "intro": [
+    "TypeScript 在 JavaScript 基础上增加类型系统，主要在运行前发现问题、辅助补全和重构。运行行为仍以 JavaScript 为基础。",
+    "TypeScript adds a type system to JavaScript, mainly to find mistakes before execution and improve completion and refactoring. Runtime behavior remains based on JavaScript."
+  ],
+  "code": "// TypeScript: types describe the expected shape\ntype User = { name: string; age?: number };\nfunction greet(user: User): string {\n  return `hello ${user.name}`;\n}\nconsole.log(greet({ name: \"Ada\" }));\n// greet({ name: 123 }); // type checker reports an error\n\n// Equivalent JavaScript after removing types:\n// function greet(user) { return `hello ${user.name}`; }\n\n// Generics preserve relationships between types:\nfunction first<T>(items: T[]): T | undefined {\n  return items[0];\n}\nconst value = first([1, 2]); // number | undefined\nif (value !== undefined) console.log(value.toFixed(1));",
+  "go": [
+    "像 Go 一样提前检查类型，但 TS 大量使用类型推断和结构化类型：形状符合即可。与 Go 不同，interface/type 等类型信息通常会在生成 JS 时被擦除，不是运行时的数据约束。",
+    "Like Go, TS checks types ahead of time, but relies heavily on inference and structural typing: matching shapes are compatible. Unlike Go, interface/type information is typically erased when producing JS; it is not a runtime data constraint."
+  ],
+  "trap": [
+    "主要能力：类型推断、参数和返回值检查、对象形状（type/interface）、联合类型与控制流收窄、泛型、空值检查（strictNullChecks）。any 会绕开许多检查，unknown 要先收窄；as 只是类型断言，不会转换数据。API/JSON 输入仍需运行时校验。本项目用 esbuild 转译 TS，不做类型检查：能运行不代表类型正确。完整项目通常另用 tsc --noEmit 检查。TS 不会自动加速 JS，也不会让 async 自动多线程。",
+    "Main features: inference, parameter/return checks, object shapes (type/interface), unions and control-flow narrowing, generics, and null checks (strictNullChecks). any bypasses many checks; unknown needs narrowing. as asserts a type without converting data. API/JSON input still needs runtime validation. This project transpiles TS with esbuild without type checking: successful execution does not prove type correctness. Full projects typically also run tsc --noEmit. TS does not automatically speed up JS or make async multithreaded."
+  ],
+  "url": "https://www.typescriptlang.org/docs/handbook/typescript-in-5-minutes.html"
+},
+{
   "id": "json",
   "title": [
     "JSON：解析与序列化",
@@ -171,7 +192,7 @@ const related = {
   '04-modules': ['functions', 'modules'], '05-execution': ['runtime', 'promise', 'await', 'queues'],
   '24-control-flow': ['variables', 'iteration'],
   '06-collections': ['array-methods', 'iteration', 'functions'], '08-errors': ['errors', 'promise', 'await'],
-  '09-typescript': ['functions', 'modules'], '14-files': ['await'],
+  '09-typescript': ['typescript', 'functions', 'modules'], '14-files': ['await'],
   '17-react': ['functions', 'modules'], '18-api-contract': ['await', 'promise']
 };
 function QueueDemo({ en }) {

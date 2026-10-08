@@ -337,7 +337,7 @@ test('Tips breadcrumb opens an alphabetical drawer index and returns to details'
   await dialog.getByRole('button',{name:'TIPS',exact:true}).click();
   await expect(dialog.getByRole('heading',{name:'全部 Tips',exact:true})).toBeVisible();
   const index = dialog.getByRole('navigation',{name:'Tips 目录'});
-  await expect(index.locator('strong')).toHaveText(['Array methods: filter / map / reduce','Arrow functions and declarations','async / await','Declarations and scope','Error and try / catch / finally','ESM / CommonJS','Iteration: Go range and JS loops','JSON: parse and stringify','Microtasks, nextTick and timers','Promise / resolve / then','Runtime: V8, Node, libuv and Go GMP','Shallow and deep copies','Values and object references']);
+  await expect(index.locator('strong')).toHaveText(['Array methods: filter / map / reduce','Arrow functions and declarations','async / await','Declarations and scope','Error and try / catch / finally','ESM / CommonJS','Iteration: Go range and JS loops','JSON: parse and stringify','Microtasks, nextTick and timers','Promise / resolve / then','Runtime: V8, Node, libuv and Go GMP','Shallow and deep copies','TypeScript and JavaScript','Values and object references']);
   await index.getByRole('button',{name:'Promise / resolve / then',exact:true}).click();
   await expect(dialog.getByRole('heading',{name:'Promise / resolve / then',exact:true})).toBeVisible();
   await dialog.getByRole('button',{name:'TIPS',exact:true}).click();
@@ -388,4 +388,16 @@ test('JSON lesson links to bilingual serialization tips', async ({page}) => {
   await page.getByLabel('语言 / Language').selectOption('en');
   await page.locator('.tips-bar').getByRole('button',{name:'JSON: parse and stringify'}).click();
   await expect(page.getByRole('dialog')).toContainText('validation is still needed');
+});
+
+test('TypeScript lesson explains type checking versus runtime in both languages', async ({page}) => {
+  await page.goto('/');
+  await page.evaluate(() => localStorage.setItem('nodejs-for-golang-developers:last', JSON.stringify('09-typescript')));
+  await page.reload();
+  await page.locator('.tips-bar').getByRole('button',{name:'TypeScript 与 JavaScript'}).click();
+  await expect(page.getByRole('dialog')).toContainText('不做类型检查');
+  await page.keyboard.press('Escape');
+  await page.getByLabel('语言 / Language').selectOption('en');
+  await page.locator('.tips-bar').getByRole('button',{name:'TypeScript and JavaScript'}).click();
+  await expect(page.getByRole('dialog')).toContainText('runtime validation');
 });
