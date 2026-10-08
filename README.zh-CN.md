@@ -32,8 +32,8 @@ HOST=0.0.0.0 PORT=3000 ACCESS_TOKEN='your-random-token-at-least-24-characters' n
 
 | 阶段 | 子项 |
 | --- | --- |
-| 心智模型 · 4 | 值与引用、函数与模块、异步执行、判断与循环 |
-| JS / TS · 4 | 集合变换、JSON、错误处理、TypeScript |
+| 心智模型 · 2 | 值与引用、同步异步与事件循环 |
+| JS / TS · 6 | 判断与循环、函数与模块、集合变换、JSON、错误处理、TypeScript |
 | Node 后端 · 7 | HTTP 服务、路由、查询参数、请求体、响应头、中间件、文件 |
 | 前端 · 3 | HTML/CSS、DOM 事件、React/JSX |
 | 全栈整合 · 3 | API 消费、服务端渲染、表单校验 |

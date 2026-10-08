@@ -32,8 +32,8 @@ All **24 items across six stages** include editable code, Chinese/English explan
 
 | Stage | Items |
 | --- | --- |
-| Mental models · 4 | Values and references; functions and modules; async execution; conditions and loops |
-| JS / TS · 4 | Collections; JSON; errors; TypeScript |
+| Mental models · 2 | Values and references; sync, async and the event loop |
+| JS / TS · 6 | Conditions and loops; functions and modules; collections; JSON; errors; TypeScript |
 | Node backend · 7 | HTTP server; routing; query parameters; request bodies; headers; middleware; files |
 | Frontend · 3 | HTML/CSS; DOM events; React/JSX |
 | Full-stack integration · 3 | API consumption; server rendering; form validation |

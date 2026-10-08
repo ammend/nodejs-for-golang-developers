@@ -2,6 +2,37 @@ import React, { useEffect, useRef, useState } from "react";
 
 const tips = [
 {
+  "id": "runtime",
+  "title": [
+    "V8、Node、libuv 与 Go GMP",
+    "Runtime: V8, Node, libuv and Go GMP"
+  ],
+  "intro": [
+    "Node 是完整运行时：V8 执行 JS，Node API 与原生绑定连接底层能力，libuv 提供事件循环及部分异步 I/O 支持。它们不是三条依次执行所有代码的流水线。",
+    "Node is the runtime: V8 executes JS, Node APIs and native bindings connect native capabilities, and libuv provides the event loop and parts of async I/O. These are not three sequential stages for every instruction."
+  ],
+  "code": "Node: JS executed by V8\n       │ Node API / native bindings\n       ├─ network → OS readiness notifications\n       └─ many file operations → libuv worker pool\n       completion → event loop → JS callback / Promise continuation\n\nGo:   G (goroutine) ── scheduled onto ── M (OS thread) + P\n      network wait → park G → netpoll readiness → runnable G\n      scheduler → resume G on an available M with P",
+  "go": [
+    "G 是 goroutine，M 是操作系统线程，P 是执行 Go 代码所需的调度资源，数量由 GOMAXPROCS 控制；P 不是物理 CPU。多个 G 可以分配到多个 M/P 并行执行。网络等待常由 netpoll 挂起和唤醒 G；阻塞系统调用可能占住 M，运行时可以把 P 交给其他 M。",
+    "G is a goroutine, M an OS thread, and P the scheduler resources needed to execute Go code, with the count controlled by GOMAXPROCS. P is not a physical CPU. Gs can run in parallel on multiple M/P pairs. Network waits typically park Gs for netpoll; blocking syscalls may occupy an M while its P is handed to another M."
+  ],
+  "trap": [
+    "默认一个 Node JS 执行线程逐个运行回调，但进程不止一个线程。libuv 线程池不是 JS goroutine 池；worker_threads 才能运行另一份 JS 执行环境。V8 管理 Promise 微任务，Node 管理 nextTick 并协调检查点，它们不是 libuv 的事件循环阶段。await 暂停函数后续，不会自动分配线程。Go 调度器可抢占 goroutine，而长时间同步 JS 会堵住该事件循环。",
+    "A default Node JS thread runs callbacks serially, but the process has other threads. The libuv pool is not a pool of JS goroutines; worker_threads provide additional JS environments. V8 manages Promise microtasks; Node manages nextTick and coordinates checkpoints. Neither is a libuv loop phase. await pauses a continuation without allocating a thread. Go can preempt goroutines; long synchronous JS blocks its event loop."
+  ],
+  "url": "https://nodejs.org/en/learn/asynchronous-work/dont-block-the-event-loop",
+  "sources": [
+    [
+      "Go runtime: G / M / P",
+      "https://github.com/golang/go/blob/master/src/runtime/HACKING.md"
+    ],
+    [
+      "libuv design",
+      "https://docs.libuv.org/en/v1.x/design.html"
+    ]
+  ]
+},
+{
   "id": "errors",
   "title": [
     "Error 与 try / catch / finally",
@@ -115,7 +146,7 @@ const tips = [
 ];
 const related = {
   '03-values': ['variables', 'references', 'copying'],
-  '04-modules': ['functions', 'modules'], '05-execution': ['promise', 'await', 'queues'],
+  '04-modules': ['functions', 'modules'], '05-execution': ['runtime', 'promise', 'await', 'queues'],
   '24-control-flow': ['variables', 'iteration'],
   '06-collections': ['array-methods', 'iteration', 'functions'], '08-errors': ['errors', 'promise', 'await'],
   '09-typescript': ['functions', 'modules'], '14-files': ['await'],
@@ -148,6 +179,6 @@ export default function Tips({ lesson, locale }) {
     <dialog ref={dialog} className="tips-drawer" aria-label={en ? 'Knowledge tips' : '知识 Tips'} onCancel={close}>
       <button className="tips-close" onClick={close}>{en ? 'Close' : '关闭'} ×</button>
       {selected === 'all' && <><h2>{en ? 'All Tips' : '全部 Tips'}</h2><p>{en ? 'English title · A–Z' : '按英文标题 A–Z 排序'}</p><nav className="tips-index" aria-label={en ? 'Tips index' : 'Tips 目录'}>{[...tips].sort((a,b) => a.title[1].localeCompare(b.title[1], 'en')).map(t => <button key={t.id} onClick={() => open(t.id)}><strong>{t.title[1]}</strong>{!en && t.title[0] !== t.title[1] && <span>{t.title[0]}</span>}</button>)}</nav></>}
-      {tip && <><p className="eyebrow"><button onClick={() => open('all')}>TIPS</button> / {tips.indexOf(tip) + 1}</p><h2>{text(tip.title)}</h2><p>{text(tip.intro)}</p><pre>{tip.code}</pre>{tip.id === 'queues' && <QueueDemo en={en} />}<h3>{en ? 'Connect to Go' : '对照 Go'}</h3><p>{text(tip.go)}</p><h3>{en ? 'Watch out' : '容易误解的地方'}</h3><p>{text(tip.trap)}</p><p><a href={tip.url} target="_blank" rel="noreferrer">{en ? 'Official reference' : '官方参考'}</a> · <a href={`#tip=${tip.id}`}>{en ? 'Link to this tip' : '本条链接'}</a></p></>}
+      {tip && <><p className="eyebrow"><button onClick={() => open('all')}>TIPS</button> / {tips.indexOf(tip) + 1}</p><h2>{text(tip.title)}</h2><p>{text(tip.intro)}</p><pre>{tip.code}</pre>{tip.id === 'queues' && <QueueDemo en={en} />}<h3>{en ? 'Connect to Go' : '对照 Go'}</h3><p>{text(tip.go)}</p><h3>{en ? 'Watch out' : '容易误解的地方'}</h3><p>{text(tip.trap)}</p>{tip.sources && <ul>{tip.sources.map(([label,url]) => <li key={url}><a href={url} target="_blank" rel="noreferrer">{label}</a></li>)}</ul>}<p><a href={tip.url} target="_blank" rel="noreferrer">{en ? 'Official reference' : '官方参考'}</a> · <a href={`#tip=${tip.id}`}>{en ? 'Link to this tip' : '本条链接'}</a></p></>}
     </dialog></>;
 }
