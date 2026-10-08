@@ -2,6 +2,27 @@ import React, { useEffect, useRef, useState } from "react";
 
 const tips = [
 {
+  "id": "packages",
+  "title": [
+    "npm、依赖与锁文件",
+    "Packages: npm and lockfiles"
+  ],
+  "intro": [
+    "包管理器安装和复现依赖；模块系统负责导入代码。先用 npm 理解这两个不同职责。",
+    "Package managers install and reproduce dependencies; the module system imports code. Start with npm to understand these separate responsibilities."
+  ],
+  "code": "# Run in a local project terminal, not in the JS editor\n# 在本地项目终端执行，不是 JS 编辑器\nnpm install lodash       # add runtime dependency\nnpm install -D typescript # add development tooling\nnpm uninstall lodash\nnpm run start            # run scripts.start\nnpm ci                   # install from an existing consistent lockfile\nnpm ls                   # inspect installed dependency tree\n\n# Go commands with different responsibilities / 职责不同\ngo get example.com/module@v1.2.3 # illustrative module path\ngo mod tidy\ngo mod download\ngo run .",
+  "go": [
+    "go.mod 指定模块及依赖，go.sum 校验下载内容，模块通常在共享缓存。npm 的 package.json 定义 dependencies（运行依赖）、devDependencies（构建测试工具）和 scripts；常见安装目录是 node_modules。不要把 go.sum 当作 package-lock.json 的直接对应物。",
+    "go.mod declares modules/dependencies, go.sum checks downloaded contents, and modules normally live in a shared cache. npm package.json defines dependencies for runtime, devDependencies for build/test tools and scripts; node_modules is the common installation directory. go.sum is not equivalent to package-lock.json."
+  ],
+  "trap": [
+    "版本范围：1.2.3 是精确版本，~1.2.3 允许到小于 1.3.0，^1.2.3 允许到小于 2.0.0；0.x 的 ^ 更严格。锁文件记录具体解析结果。npm install 可添加依赖并更新锁文件；npm ci 要求清单与锁文件一致，会移除现有 node_modules，且不改写清单/锁文件。提交 package.json 与锁文件，不提交 node_modules。pnpm、Yarn 是其他包管理器，使用各自锁文件，按团队选择统一。本例无外部依赖，展示包自引用和真实空依赖锁文件；网页不会执行 npm 安装，也不会自动执行 scripts。",
+    "Versions: 1.2.3 is exact, ~1.2.3 permits versions below 1.3.0, ^1.2.3 below 2.0.0; ^ is stricter for 0.x. Lockfiles record resolved versions. npm install can add dependencies and update the lock; npm ci requires a matching manifest/lock, removes existing node_modules and does not rewrite either file. Commit manifest and lock, not node_modules. pnpm and Yarn are alternatives with their own locks; use the team’s chosen manager consistently. This dependency-free example shows package self-reference and a real empty-dependency lockfile. The web runner does not install packages or automatically run scripts."
+  ],
+  "url": "https://docs.npmjs.com/cli/commands/npm-ci/"
+},
+{
   "id": "typescript",
   "title": [
     "TypeScript 与 JavaScript",
@@ -187,6 +208,7 @@ const tips = [
     url: 'https://nodejs.org/api/packages.html#determining-module-system' }
 ];
 const related = {
+  '25-packages': ['packages', 'modules'],
   '07-json': ['json', 'references', 'copying'],
   '03-values': ['variables', 'references', 'copying'],
   '04-modules': ['functions', 'modules'], '05-execution': ['runtime', 'promise', 'await', 'queues'],

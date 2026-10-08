@@ -21,19 +21,19 @@ Open **http://127.0.0.1:3000**. Stop with `Ctrl+C`.
 For a remote machine, set your own long token, then run:
 
 ```bash
-HOST=0.0.0.0 PORT=3000 ACCESS_TOKEN='your-random-token-at-least-24-characters' npm start
+HOST=0.0.0.0 PORT=3000 ACCESS_TOKEN='your-random-token-at-least-25-characters' npm start
 ```
 
 Open `http://SERVER_IP:3000` and enter that token. Use a trusted network or an encrypted SSH tunnel: `ssh -L 3000:127.0.0.1:3000 user@server`. This runs code with the server account’s permissions; it is **not a multi-user sandbox**.
 
 ## Curriculum
 
-All **24 items across six stages** include editable code, Chinese/English explanations, and an exercise.
+All **25 items across six stages** include editable code, Chinese/English explanations, and an exercise.
 
 | Stage | Items |
 | --- | --- |
 | Mental models · 2 | Values and references; sync, async and the event loop |
-| JS / TS · 6 | Conditions and loops; functions and modules; collections; JSON; errors; TypeScript |
+| JS / TS · 7 | Conditions and loops; functions and modules; packages and dependencies; collections; JSON; errors; TypeScript |
 | Node backend · 7 | HTTP server; routing; query parameters; request bodies; headers; middleware; files |
 | Frontend · 3 | HTML/CSS; DOM events; React/JSX |
 | Full-stack integration · 3 | API consumption; server rendering; form validation |

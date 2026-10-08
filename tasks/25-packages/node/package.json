@@ -1,0 +1,10 @@
+{
+  "name": "learning-packages",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "exports": "./greet.js",
+  "scripts": { "start": "node main.js" },
+  "dependencies": {},
+  "devDependencies": {}
+}

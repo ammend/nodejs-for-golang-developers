@@ -86,10 +86,23 @@ export const lessons = [
     "exercise": "给 greet 增加一个问候语参数。"
   },
   {
+    "id": "25-packages",
+    "stage": "language",
+    "title": "包与依赖管理",
+    "number": "02.03",
+    "description": "从项目清单理解包名、入口、脚本与外部依赖。",
+    "observe": "两侧无需安装第三方依赖。Node 按包名自引用 exports，Go 调用同包函数。",
+    "differences": [
+      "package.json 声明元数据、依赖和脚本；go.mod 声明模块路径与依赖。",
+      "package-lock.json 锁定依赖树；go.sum 记录校验信息，不是同一种锁文件。"
+    ],
+    "exercise": "在本地运行 npm start，对照网页输出；修改 greet 实现再次运行。命令说明见 Tips。"
+  },
+  {
     "id": "06-collections",
     "stage": "language",
     "title": "数组与集合变换",
-    "number": "02.03",
+    "number": "02.04",
     "description": "筛选、映射，然后求和。",
     "observe": "偶数翻倍后为 [4,8]，总和为 12。",
     "differences": [
@@ -102,7 +115,7 @@ export const lessons = [
     "id": "07-json",
     "stage": "language",
     "title": "JSON 与边界数据",
-    "number": "02.04",
+    "number": "02.05",
     "description": "把字符串解析为数据，再进行字段校验。",
     "observe": "正确数据输出 Ada；缺少 name 时明确报错。",
     "differences": [
@@ -115,7 +128,7 @@ export const lessons = [
     "id": "08-errors",
     "stage": "language",
     "title": "错误处理与恢复",
-    "number": "02.05",
+    "number": "02.06",
     "description": "让调用方决定如何处理失败。",
     "observe": "除零报错后，后续计算仍会继续。",
     "differences": [
@@ -129,7 +142,7 @@ export const lessons = [
     "id": "09-typescript",
     "stage": "language",
     "title": "TypeScript 类型与运行时",
-    "number": "02.06",
+    "number": "02.07",
     "description": "用类型表达数据结构，仍然校验外部输入。",
     "observe": "类型在运行前移除；校验函数决定是否接受输入。",
     "differences": [
@@ -496,5 +509,11 @@ export const lessonEnglish = {
   "测试应该检查可观察行为，而不是重复实现代码。": "Tests should check observable behavior, not duplicate implementation details.",
   "这里用最小断言展示测试思想，学习进度仍只按点击运行记录。": "Minimal assertions illustrate testing; progress still records only a click on Run.",
   "同步、异步与事件循环": "Sync, async and the event loop",
-  "值的语义与运行机制": "Value semantics and runtime behavior"
+  "值的语义与运行机制": "Value semantics and runtime behavior",
+  "包与依赖管理": "Packages and dependencies",
+  "从项目清单理解包名、入口、脚本与外部依赖。": "Read the manifest to understand package names, entry points, scripts and dependencies.",
+  "两侧无需安装第三方依赖。Node 按包名自引用 exports，Go 调用同包函数。": "Neither side needs third-party dependencies. Node self-references its exports by package name; Go calls a same-package function.",
+  "package.json 声明元数据、依赖和脚本；go.mod 声明模块路径与依赖。": "package.json declares metadata, dependencies and scripts; go.mod declares the module path and dependencies.",
+  "package-lock.json 锁定依赖树；go.sum 记录校验信息，不是同一种锁文件。": "package-lock.json locks the dependency tree; go.sum records checksums and is not the same kind of lockfile.",
+  "在本地运行 npm start，对照网页输出；修改 greet 实现再次运行。命令说明见 Tips。": "Run npm start locally and compare the web output; edit greet and rerun. See Tips for commands."
 };
