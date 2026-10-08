@@ -1,6 +1,48 @@
 import React, { useEffect, useRef, useState } from "react";
 
 const tips = [
+{
+  "id": "array-methods",
+  "title": [
+    "数组方法：filter / map / reduce",
+    "Array methods: filter / map / reduce"
+  ],
+  "intro": [
+    "filter 留下符合条件的元素，map 把每项变成新值，reduce 把多项汇总成一个结果。",
+    "filter selects items, map transforms each item, and reduce combines items into a result."
+  ],
+  "code": "const numbers = [1, 2, 3, 4];\nconst even = numbers.filter(n => n % 2 === 0); // [2, 4]\nconst doubled = even.map(n => n * 2); // [4, 8]\nconst total = doubled.reduce((sum, n) => sum + n, 0); // 12\nconsole.log(total);\n// Equivalent chain:\nconsole.log(numbers.filter(n => n % 2 === 0)\n  .map(n => n * 2).reduce((sum, n) => sum + n, 0));",
+  "go": [
+    "Go 常用 for range + append 完成筛选和映射，用累加变量完成归约。JS 的 map 方法不是 Go 的 map 字典类型。",
+    "Go typically uses for range and append for filtering and mapping, and an accumulator for reduction. JS array map is not Go’s map dictionary type."
+  ],
+  "trap": [
+    "reduce 的 0 是初始累加值；空数组不传初始值会报错。find 找第一项，some 判断是否至少一项满足，every 判断是否全部满足，forEach 做副作用且返回 undefined。filter/map 不直接修改原数组，但回调仍能修改共享对象；forEach 不会等待 async 回调。",
+    "The 0 is the initial accumulator; reducing an empty array without an initial value throws. find returns the first match, some tests any match, every tests all, and forEach performs side effects and returns undefined. filter/map do not directly mutate the source, but callbacks can mutate shared objects; forEach does not await async callbacks."
+  ],
+  "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array"
+},
+{
+  "id": "iteration",
+  "title": [
+    "Go range 与 JS 遍历",
+    "Iteration: Go range and JS loops"
+  ],
+  "intro": [
+    "先区分要遍历的是索引、值，还是对象的键。",
+    "First decide whether you need indexes, values or object keys."
+  ],
+  "code": "// Go slice:\n// for i, value := range items { fmt.Println(i, value) }\n\nconst items = [\"Ada\", \"Lin\"];\nfor (const value of items) console.log(value);\nfor (const [i, value] of items.entries()) console.log(i, value);\n\nconst user = { name: \"Ada\", age: 20 };\nfor (const [key, value] of Object.entries(user)) {\n  console.log(key, value);\n}",
+  "go": [
+    "Go 遍历 slice 得到索引和值，遍历 map 得到键和值，map 顺序不保证。JS for…of 读取可迭代对象的值；普通对象要用 Object.entries 等转换。",
+    "Go range yields index/value for slices and key/value for maps; map order is unspecified. JS for…of reads iterable values; plain objects need conversion such as Object.entries."
+  ],
+  "trap": [
+    "for…in 遍历可枚举字符串属性名，还可能包含继承属性，不适合当数组值遍历。Object.entries 只取自身可枚举字符串键。Go range 字符串给出字节索引和 rune；JS for…of 按 Unicode 码点遍历，均不保证一个元素就是一个视觉字符。",
+    "for…in enumerates string property names, possibly inherited ones; it is not array-value iteration. Object.entries includes only own enumerable string keys. Go string range yields byte indexes and runes; JS for…of iterates Unicode code points. Neither guarantees one visual character per item."
+  ],
+  "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Loops_and_iteration"
+},
   { id: 'variables', title: ['变量声明与作用域', 'Declarations and scope'],
     intro: ['优先用 const；需要重新赋值时用 let。两者都有块级作用域。', 'Use const by default and let when reassignment is needed. Both are block-scoped.'],
     code: 'const user = { name: "Ada" };\nuser.name = "Lin"; // allowed: mutate object\n// user = {};     // error: reassign const\n\nlet count = 0;\ncount += 1;\nif (true) {\n  let inside = 1;\n  var outside = 2;\n}\nconsole.log(outside); // 2\n// console.log(inside); // ReferenceError',
@@ -53,7 +95,8 @@ const tips = [
 const related = {
   '03-values': ['variables', 'references', 'copying'],
   '04-modules': ['functions', 'modules'], '05-execution': ['promise', 'await', 'queues'],
-  '06-collections': ['functions'], '08-errors': ['promise', 'await'],
+  '24-control-flow': ['variables', 'iteration'],
+  '06-collections': ['array-methods', 'iteration', 'functions'], '08-errors': ['promise', 'await'],
   '09-typescript': ['functions', 'modules'], '14-files': ['await'],
   '17-react': ['functions', 'modules'], '18-api-contract': ['await', 'promise']
 };

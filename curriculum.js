@@ -71,6 +71,20 @@ export const lessons = [
     ],
     exercise: "将 end 的打印移到等待之前，再比较顺序。",
   },
+{
+  "id": "24-control-flow",
+  "stage": "model",
+  "title": "判断与循环",
+  "number": "01.04",
+  "description": "对照分支、计数循环、条件循环与遍历。",
+  "observe": "两侧以相同顺序输出判断结果、索引和值。",
+  "differences": [
+    "Go 的 if 条件必须是 bool；JS 还会把值转换为真或假，建议写清楚比较条件。",
+    "Go 用 for 表达计数循环与条件循环；JS 分别支持 for、while 和 do…while。",
+    "Go switch 默认不贯穿分支；JS switch 通常需要 break。两侧都有 break 和 continue。"
+  ],
+  "exercise": "把循环上限从 3 改为 5，再跳过值为 2 的那次循环。"
+},
   {
     id: "06-collections",
     stage: "language",
@@ -346,6 +360,14 @@ export const lessons = [
   },
 ];
 export const lessonEnglish = {
+"判断与循环": "Conditions and loops",
+"对照分支、计数循环、条件循环与遍历。": "Compare branches, counted loops, condition loops and iteration.",
+"两侧以相同顺序输出判断结果、索引和值。": "Both sides print the same decisions, indexes and values in the same order.",
+"Go 的 if 条件必须是 bool；JS 还会把值转换为真或假，建议写清楚比较条件。": "Go if requires a bool; JS also coerces values to true or false. Prefer explicit comparisons.",
+"Go 用 for 表达计数循环与条件循环；JS 分别支持 for、while 和 do…while。": "Go uses for for counted and condition loops; JS provides for, while and do…while.",
+"Go switch 默认不贯穿分支；JS switch 通常需要 break。两侧都有 break 和 continue。": "Go switch does not fall through by default; JS switch usually needs break. Both have break and continue.",
+"把循环上限从 3 改为 5，再跳过值为 2 的那次循环。": "Change the loop bound from 3 to 5, then skip the iteration whose value is 2.",
+
   "值、引用与复制": "Values, references and copies",
   "先判断修改副本会不会影响原值。":
     "Predict whether changing a copy affects the original.",

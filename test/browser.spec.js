@@ -337,7 +337,7 @@ test('Tips breadcrumb opens an alphabetical drawer index and returns to details'
   await dialog.getByRole('button',{name:'TIPS',exact:true}).click();
   await expect(dialog.getByRole('heading',{name:'全部 Tips',exact:true})).toBeVisible();
   const index = dialog.getByRole('navigation',{name:'Tips 目录'});
-  await expect(index.locator('strong')).toHaveText(['Arrow functions and declarations','async / await','Declarations and scope','ESM / CommonJS','Microtasks, nextTick and timers','Promise / resolve / then','Shallow and deep copies','Values and object references']);
+  await expect(index.locator('strong')).toHaveText(['Array methods: filter / map / reduce','Arrow functions and declarations','async / await','Declarations and scope','ESM / CommonJS','Iteration: Go range and JS loops','Microtasks, nextTick and timers','Promise / resolve / then','Shallow and deep copies','Values and object references']);
   await index.getByRole('button',{name:'Promise / resolve / then',exact:true}).click();
   await expect(dialog.getByRole('heading',{name:'Promise / resolve / then',exact:true})).toBeVisible();
   await dialog.getByRole('button',{name:'TIPS',exact:true}).click();
@@ -357,4 +357,22 @@ test('values lesson links only relevant concepts', async ({page}) => {
   await expect(bar.getByRole('button')).toHaveText(['Tips','变量声明与作用域','值与对象引用','浅复制与深复制']);
   await bar.getByRole('button',{name:'变量声明与作用域'}).click();
   await expect(page.getByRole('dialog')).toContainText('暂时性死区');
+});
+
+test('collections and control flow expose focused tips and matching execution', async ({page}) => {
+  await page.goto('/');
+  await page.evaluate(() => localStorage.setItem('nodejs-for-golang-developers:last', JSON.stringify('06-collections')));
+  await page.reload();
+  await page.locator('.tips-bar').getByRole('button', {name:'数组方法：filter / map / reduce'}).click();
+  await expect(page.getByRole('dialog')).toContainText('初始累加值');
+  await page.keyboard.press('Escape');
+  await page.evaluate(() => localStorage.setItem('nodejs-for-golang-developers:last', JSON.stringify('24-control-flow')));
+  await page.reload();
+  await expect(page.getByRole('heading',{level:1})).toHaveText('判断与循环');
+  await page.getByRole('button',{name:'运行 Node.js',exact:true}).click();
+  await expect(page.locator('.node .output')).toContainText('first Ada');
+  await page.getByRole('button',{name:'运行 Go',exact:true}).click();
+  await expect(page.locator('.go .output')).toContainText('first Ada');
+  await page.locator('.tips-bar').getByRole('button',{name:'Go range 与 JS 遍历'}).click();
+  await expect(page.getByRole('dialog')).toContainText('继承属性');
 });

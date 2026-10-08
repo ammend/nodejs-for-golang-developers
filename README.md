@@ -28,11 +28,11 @@ Open `http://SERVER_IP:3000` and enter that token. Use a trusted network or an e
 
 ## Curriculum
 
-All **23 items across six stages** include editable code, Chinese/English explanations, and an exercise.
+All **24 items across six stages** include editable code, Chinese/English explanations, and an exercise.
 
 | Stage | Items |
 | --- | --- |
-| Mental models · 3 | Values and references; functions and modules; async execution |
+| Mental models · 4 | Values and references; functions and modules; async execution; conditions and loops |
 | JS / TS · 4 | Collections; JSON; errors; TypeScript |
 | Node backend · 7 | HTTP server; routing; query parameters; request bodies; headers; middleware; files |
 | Frontend · 3 | HTML/CSS; DOM events; React/JSX |
