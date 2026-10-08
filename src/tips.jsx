@@ -2,6 +2,27 @@ import React, { useEffect, useRef, useState } from "react";
 
 const tips = [
 {
+  "id": "errors",
+  "title": [
+    "Error 与 try / catch / finally",
+    "Error and try / catch / finally"
+  ],
+  "intro": [
+    "Error 描述失败，throw 抛出失败，catch 处理失败，finally 执行收尾。",
+    "Error describes failure, throw raises it, catch handles it, and finally performs cleanup."
+  ],
+  "code": "async function run(n) {\n  try {\n    if (n === 0) throw new Error(\"division by zero\");\n    console.log(12 / n);\n  } catch (error) {\n    if (!(error instanceof Error)) throw error;\n    console.log(error.name); // Error\n    console.log(error.message); // division by zero\n  } finally {\n    console.log(\"cleanup\");\n  }\n}\nawait run(3);\nawait run(0);",
+  "go": [
+    "Go 通常返回 (value, error)，检查错误后继续或返回。defer 在所在函数返回时收尾；JS finally 在离开对应 try/catch 时收尾，时机不完全相同。",
+    "Go normally returns (value, error), then checks the error. defer runs when its containing function returns; JS finally runs when leaving the associated try/catch, so their scope differs."
+  ],
+  "trap": [
+    "new Error 只是创建对象，不会自动抛出。name 是类型名称，message 是说明，stack 常用于调试堆栈，格式依运行时。可用 cause 保存原始错误。JS 能抛任意值，不能总是假定 error.message 存在。finally 在正常控制流中成功失败都执行，即使 try/catch return；不要在 finally return/throw 覆盖原结果。try/catch 可捕获 await 的拒绝，但捕获不到稍后定时器回调里的抛错。",
+    "new Error creates an object; it does not throw by itself. name identifies its type, message describes it, and stack provides runtime-dependent debug details. cause can preserve an underlying error. JS can throw any value, so error.message is not guaranteed. In normal control flow, finally runs on success or failure, including return; returning or throwing there overrides the prior outcome. try/catch can catch an awaited rejection, but not an exception thrown later in a timer callback."
+  ],
+  "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/try...catch"
+},
+{
   "id": "array-methods",
   "title": [
     "数组方法：filter / map / reduce",
@@ -96,7 +117,7 @@ const related = {
   '03-values': ['variables', 'references', 'copying'],
   '04-modules': ['functions', 'modules'], '05-execution': ['promise', 'await', 'queues'],
   '24-control-flow': ['variables', 'iteration'],
-  '06-collections': ['array-methods', 'iteration', 'functions'], '08-errors': ['promise', 'await'],
+  '06-collections': ['array-methods', 'iteration', 'functions'], '08-errors': ['errors', 'promise', 'await'],
   '09-typescript': ['functions', 'modules'], '14-files': ['await'],
   '17-react': ['functions', 'modules'], '18-api-contract': ['await', 'promise']
 };

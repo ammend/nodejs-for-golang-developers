@@ -11,13 +11,19 @@ func divide(n float64) (float64, error) {
 	}
 	return 12 / n, nil
 }
+
+// defer runs at function return / 用独立函数让每次计算都收尾
+func attempt(n float64) {
+	defer fmt.Println("cleanup")
+	v, e := divide(n)
+	if e != nil {
+		fmt.Println(e)
+		return
+	}
+	fmt.Println(v)
+}
 func main() {
 	for _, n := range []float64{3, 0, 2} {
-		v, e := divide(n)
-		if e != nil {
-			fmt.Println(e)
-		} else {
-			fmt.Println(v)
-		}
+		attempt(n)
 	}
 }

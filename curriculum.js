@@ -121,6 +121,7 @@ export const lessons = [
     differences: [
       "Go 返回 error；JS 用 throw 抛出异常。",
       "try/catch 也可以捕获 await 等待的 Promise rejection。",
+      "JS finally 在离开 try/catch 时收尾；Go defer 在所在函数返回时执行。",
     ],
     exercise: "增加一个非法输入，看后续计算是否受影响。",
   },
@@ -360,6 +361,7 @@ export const lessons = [
   },
 ];
 export const lessonEnglish = {
+  "JS finally 在离开 try/catch 时收尾；Go defer 在所在函数返回时执行。": "JS finally runs when leaving try/catch; Go defer runs when its containing function returns.",
 "判断与循环": "Conditions and loops",
 "对照分支、计数循环、条件循环与遍历。": "Compare branches, counted loops, condition loops and iteration.",
 "两侧以相同顺序输出判断结果、索引和值。": "Both sides print the same decisions, indexes and values in the same order.",

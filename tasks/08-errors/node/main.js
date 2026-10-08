@@ -7,5 +7,8 @@ for (const n of [3, 0, 2]) {
     console.log(await divide(n));
   } catch (error) {
     console.log(error.message);
+  } finally {
+    // Cleanup on success and failure / 成功和失败都收尾
+    console.log("cleanup");
   }
 }
