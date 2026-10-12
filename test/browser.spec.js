@@ -431,3 +431,19 @@ test('OOP lesson shows shared behavior and links abstraction tips', async ({page
   await page.getByLabel('语言 / Language').selectOption('en');
   await expect(page.getByRole('heading',{level:1})).toHaveText('Objects and abstraction');
 });
+
+test('new frontend build prompts for refresh without discarding editor state', async ({page}) => {
+  const response = await page.goto('/');
+  expect(response.headers()['cache-control']).toBe('no-store');
+  await page.locator('.node .cm-content').fill('console.log("saved draft")');
+  await page.route('**/', route => {
+    if (route.request().resourceType() === 'fetch') return route.fulfill({contentType:'text/html',body:'<script type="module" src="/assets/new-version.js"></script>'});
+    return route.continue();
+  });
+  await page.evaluate(() => window.dispatchEvent(new Event('focus')));
+  await expect(page.getByRole('button',{name:'更新页面',exact:true})).toBeVisible();
+  await expect(page.locator('.node .cm-content')).toContainText('saved draft');
+  await page.unroute('**/');
+  await page.getByRole('button',{name:'更新页面',exact:true}).click();
+  await expect(page.locator('.node .cm-content')).toContainText('saved draft');
+});

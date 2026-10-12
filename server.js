@@ -234,6 +234,7 @@ const server = http.createServer(async (req, res) => {
     const file = pathname === "/" ? "index.html" : pathname.slice(1);
     const content = await readFile(path.join(root, "dist", file));
     res.writeHead(200, {
+      "Cache-Control": file === "index.html" ? "no-store" : "public, max-age=31536000, immutable",
       "Content-Type": `${mime[path.extname(file)] || "application/octet-stream"}; charset=utf-8`,
     });
     res.end(content);

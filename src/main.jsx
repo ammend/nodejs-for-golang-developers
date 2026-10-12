@@ -240,6 +240,26 @@ function Editor(props) {
   );
 }
 function App() {
+  const [updateAvailable, setUpdateAvailable] = useState(false);
+  useEffect(() => {
+    const current = document.querySelector('script[type="module"][src]')?.getAttribute('src');
+    if (!current) return;
+    let active = true;
+    const check = async () => {
+      if (document.visibilityState !== 'visible') return;
+      try {
+        const response = await fetch('/', { cache: 'no-store' });
+        if (!response.ok) return;
+        const html = new DOMParser().parseFromString(await response.text(), 'text/html');
+        const latest = html.querySelector('script[type="module"][src]')?.getAttribute('src');
+        if (active && latest && latest !== current) setUpdateAvailable(true);
+      } catch { /* Retry on the next focus or interval. */ }
+    };
+    check();
+    const timer = setInterval(check, 60000);
+    window.addEventListener('focus', check);
+    return () => { active = false; clearInterval(timer); window.removeEventListener('focus', check); };
+  }, []);
   const [saveFailed, setSaveFailed] = useState(storageFailed);
   useEffect(() => {
     const notify = () => setSaveFailed(true);
@@ -420,6 +440,10 @@ function App() {
             <option value="en">English</option>
           </select>
         </div>
+        {updateAvailable && <p role="status" className="observe">
+          <span>{t("发现新版页面，刷新即可更新；已保存的代码与进度会保留。")}</span>
+          <button onClick={() => window.location.reload()}>{t("更新页面")}</button>
+        </p>}
         <header className="page-head">
           <div>
             <p className="eyebrow">
