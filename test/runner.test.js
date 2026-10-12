@@ -245,9 +245,9 @@ test("two concurrent jobs enforce capacity; disconnect cancels jobs and releases
   }
 });
 
-test("remote binding refuses startup without an access token", async () => {
+test("remote binding refuses an explicitly weak access token", async () => {
   const child = spawn(process.execPath, ["server.js"], {
-    env: { ...process.env, HOST: "0.0.0.0", PORT: "0", ACCESS_TOKEN: "" },
+    env: { ...process.env, HOST: "0.0.0.0", PORT: "0", ACCESS_TOKEN: "short" },
     stdio: ["ignore", "ignore", "pipe"],
   });
   let errors = "";
@@ -299,4 +299,23 @@ test("every curriculum item has a working implementation and translated content"
         );
     }
   }
+});
+
+test('remote startup creates an authenticated private link automatically', async () => {
+  const child = spawn(process.execPath,['server.js'],{env:{...process.env, HOST:'0.0.0.0',PORT:'0',ACCESS_TOKEN:''},stdio:['ignore','pipe','pipe']});
+  try {
+    const output = await new Promise((resolve,reject) => {
+      let text=''; const timer=setTimeout(()=>reject(Error('startup timeout')),5000);
+      child.stdout.on('data',chunk=>{text+=chunk;if(text.includes('#token=')){clearTimeout(timer);resolve(text);}});
+      child.on('error',reject);
+    });
+    const port=output.match(/:(\d+)\n/)[1];
+    const token=output.match(/#token=([^\s]+)/)[1];
+    assert.ok(token.length >= 24);
+    const base=`http://127.0.0.1:${port}`;
+    assert.equal((await fetch(base+'/api/run',{method:'POST'})).status,401);
+    const response=await fetch(base+'/api/run',{method:'POST',headers:{'Content-Type':'application/json',Authorization:`Bearer ${token}`},body:JSON.stringify({lesson:'03-values',language:'node',files:await files('03-values','node')})});
+    assert.equal(response.status,200);
+    assert.equal((await response.json()).code,0);
+  } finally { const exited=once(child,'exit'); child.kill('SIGTERM'); await exited; }
 });

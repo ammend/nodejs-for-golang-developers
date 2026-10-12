@@ -36,6 +36,19 @@ const theme = {
     lineHeight: "22px",
   },
 };
+const tokenStorageKey = "nodejs-for-golang-developers:access-token";
+// Consume secrets before rendering any links or Tips.
+const tokenFragment = new URLSearchParams(window.location.hash.slice(1));
+let initialToken = "";
+if (tokenFragment.has("token")) {
+  initialToken = tokenFragment.get("token") || "";
+  tokenFragment.delete("token");
+  const remaining = tokenFragment.toString();
+  history.replaceState(null, "", location.pathname + location.search + (remaining ? `#${remaining}` : ""));
+  try { sessionStorage.setItem(tokenStorageKey, initialToken); } catch {}
+} else {
+  try { initialToken = sessionStorage.getItem(tokenStorageKey) || ""; } catch {}
+}
 const sessionValues = new Map();
 let storageFailed = false;
 function load(key, fallback) {
@@ -286,7 +299,12 @@ function App() {
       : [];
   });
   const [resetVersion, setResetVersion] = useState(0);
-  const [token, setToken] = useState("");
+  const [token, setToken] = useState(initialToken);
+  const [tokenStored, setTokenStored] = useState(true);
+  useEffect(() => {
+    try { sessionStorage.setItem(tokenStorageKey, token); setTokenStored(true); }
+    catch { setTokenStored(false); }
+  }, [token]);
   const [needsToken, setNeedsToken] = useState(null);
   const [connectionError, setConnectionError] = useState("");
   const lesson = lessons.find((item) => item.id === selected) || lessons[0];
@@ -481,7 +499,7 @@ function App() {
               placeholder={t("输入启动服务时设置的令牌")}
               autoComplete="off"
             />
-            <small>{t("仅保存在当前页面内存中")}</small>
+            <small>{t(tokenStored ? "令牌保存在当前标签页，刷新无需重填" : "仅保存在当前页面内存中")}</small>
           </label>
         )}
         <Tips lesson={lesson} locale={locale} />

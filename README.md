@@ -18,13 +18,13 @@ npm start
 
 Open **http://127.0.0.1:3000**. Stop with `Ctrl+C`.
 
-For a remote machine, set your own long token, then run:
+For a remote machine, run:
 
 ```bash
-HOST=0.0.0.0 PORT=3000 ACCESS_TOKEN='your-random-token-at-least-26-characters' npm start
+HOST=0.0.0.0 PORT=3000 npm start
 ```
 
-Open `http://SERVER_IP:3000` and enter that token. Use a trusted network or an encrypted SSH tunnel: `ssh -L 3000:127.0.0.1:3000 user@server`. This runs code with the server account’s permissions; it is **not a multi-user sandbox**.
+Open the private access link printed at startup (replace its host with your reachable server IP if needed). A random token is generated per restart, consumed from the URL fragment and saved in sessionStorage for this tab; manual entry remains available. Set ACCESS_TOKEN (at least 24 characters) only if you want a stable token. Keep the link and startup logs private. Use a trusted network or an encrypted SSH tunnel: `ssh -L 3000:127.0.0.1:3000 user@server`. This runs code with the server account’s permissions; it is **not a multi-user sandbox**.
 
 ## Curriculum
 

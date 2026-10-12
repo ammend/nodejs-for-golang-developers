@@ -447,3 +447,22 @@ test('new frontend build prompts for refresh without discarding editor state', a
   await page.getByRole('button',{name:'更新页面',exact:true}).click();
   await expect(page.locator('.node .cm-content')).toContainText('saved draft');
 });
+
+test('fragment token is consumed, reused after refresh and never sent in page URL', async ({page}) => {
+  const token='test-fragment-token-at-least-24-characters';
+  const urls=[];page.on('request',r=>urls.push(r.url()));
+  await page.route('**/api/config',r=>r.fulfill({json:{needsToken:true}}));
+  await page.route('**/api/run',r=>{
+    expect(r.request().headers().authorization).toBe(`Bearer ${token}`);
+    return r.fulfill({json:{stdout:'authorized',stderr:'',code:0}});
+  });
+  await page.goto('/#token='+token);
+  await expect(page.getByPlaceholder('输入启动服务时设置的令牌')).toHaveValue(token);
+  expect(page.url()).not.toContain(token);
+  await page.reload();
+  await expect(page.getByPlaceholder('输入启动服务时设置的令牌')).toHaveValue(token);
+  await page.getByRole('button',{name:'运行 Node.js',exact:true}).click();
+  await expect(page.locator('.node .output')).toContainText('authorized');
+  expect(urls.every(url=>!url.includes(token))).toBe(true);
+  expect(await page.evaluate(()=>localStorage.getItem('nodejs-for-golang-developers:access-token'))).toBeNull();
+});

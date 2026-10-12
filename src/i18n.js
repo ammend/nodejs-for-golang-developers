@@ -2,6 +2,7 @@ import { lessonEnglish } from "../curriculum.js";
 // Keep Chinese source text as keys; no runtime dependency or duplicated lesson data.
 const en = {
   ...lessonEnglish,
+  "令牌保存在当前标签页，刷新无需重填": "Token saved in this tab; refresh without re-entering it",
   "发现新版页面，刷新即可更新；已保存的代码与进度会保留。": "A new page is available. Refresh to update; saved code and progress are kept.",
   "更新页面": "Update page",
   重来: "Start over",

@@ -9,18 +9,19 @@ import {
   stat,
 } from "node:fs/promises";
 import { spawn } from "node:child_process";
-import { tmpdir } from "node:os";
+import { networkInterfaces, tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { timingSafeEqual } from "node:crypto";
+import { randomBytes, timingSafeEqual } from "node:crypto";
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 const host = process.env.HOST || "127.0.0.1";
 const port = Number(process.env.PORT || 3000);
-const token = process.env.ACCESS_TOKEN || "";
+let token = process.env.ACCESS_TOKEN || "";
 const local = ["127.0.0.1", "localhost", "::1"].includes(host);
 if (!Number.isInteger(port) || port < 0 || port > 65535)
   throw Error("PORT must be 0–65535");
+if (!local && !token) token = randomBytes(32).toString("base64url");
 if (!local && token.length < 24)
   throw Error("Remote mode requires ACCESS_TOKEN (at least 24 characters)");
 const active = new Set();
@@ -256,11 +257,18 @@ server.on("error", (error) => {
   console.error(error.message);
   process.exit(1);
 });
-server.listen(port, host, () =>
-  console.log(
-    `nodejs-for-golang-developers listening at http://${host.includes(":") ? `[${host}]` : host}:${server.address().port}`,
-  ),
-);
+server.listen(port, host, () => {
+  const actualPort = server.address().port;
+  console.log(`nodejs-for-golang-developers listening at http://${host.includes(":") ? `[${host}]` : host}:${actualPort}`);
+  if (token) {
+    const addresses = ["0.0.0.0", "::"].includes(host)
+      ? [...new Set(Object.values(networkInterfaces()).flat().filter(a => a && !a.internal && a.family === "IPv4").map(a => a.address))]
+      : [host];
+    if (!addresses.length) addresses.push("127.0.0.1");
+    console.log("Private access links (use your reachable server IP; keep links and logs private):");
+    for (const address of addresses) console.log(`http://${address.includes(":") ? `[${address}]` : address}:${actualPort}/#token=${encodeURIComponent(token)}`);
+  }
+});
 for (const signal of ["SIGINT", "SIGTERM"])
   process.on(signal, () => {
     closing = true;
