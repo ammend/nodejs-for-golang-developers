@@ -522,7 +522,7 @@ function App() {
               : "代码与学习位置保存在此浏览器",
           )}{" "}
           <a
-            href="https://github.com/miguelmota/golang-for-nodejs-developers"
+            href="https://github.com/ammend/nodejs-for-golang-developers"
             target="_blank"
             rel="noreferrer"
           >
