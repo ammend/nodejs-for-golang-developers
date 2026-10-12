@@ -2,6 +2,27 @@ import React, { useEffect, useRef, useState } from "react";
 
 const tips = [
 {
+  "id": "ts-oop",
+  "title": [
+    "TypeScript 面向对象",
+    "TypeScript object-oriented programming"
+  ],
+  "intro": [
+    "TS 给 JS 的类增加类型契约和访问约束。interface 描述能力，abstract class 可以共享实现，implements 检查契约，extends 继承实现。",
+    "TS adds type contracts and access constraints to JS classes. interface describes capabilities; abstract class can share implementation; implements checks a contract; extends inherits implementation."
+  ],
+  "code": "interface Speaker { speak(): string; }\nabstract class Animal implements Speaker {\n  constructor(protected readonly name: string) {}\n  abstract speak(): string;\n  describe(): string { return this.name + \": \" + this.speak(); }\n}\nclass Dog extends Animal {\n  override speak(): string { return \"woof\"; }\n}\nconsole.log(new Dog(\"Ada\").describe()); // Ada: woof\n\n// Structural typing: no implements required here\nconst speaker: Speaker = { speak: () => \"hello\" };\nconsole.log(speaker.speak());",
+  "go": [
+    "Go 接口按方法集隐式实现；TS 通常按结构匹配，implements 是显式检查，不会自动生成方法。Go 没有类继承；不要把 Go 嵌入当作 extends。课程 main.ts 默认运行 payment.ts；把导入改为 main.js 可比较原 JS 实现。",
+    "Go interfaces are satisfied implicitly by method sets; TS usually matches structures. implements checks explicitly but does not generate methods. Go has no class inheritance; embedding is not extends. The lesson main.ts runs payment.ts by default; change its import to main.js to compare the JS implementation."
+  ],
+  "trap": [
+    "public 对外可见，protected 供类及子类使用，private 限制在类内；这些 TS 修饰符主要在类型检查时生效。# 字段才有 JS 运行时私有性。readonly 禁止通过该声明重新赋值，不会深度冻结对象。abstract 不能直接实例化是 TS 检查规则；接口与类型会被擦除。override 标明覆写，配合 noImplicitOverride 更易发现错误。抽象类只在确实共享实现时使用，其余优先接口与组合。本网页仅转译，类型错误须用 tsc 检查。",
+    "public is externally accessible, protected is for the class and subclasses, and private is class-only; these TS modifiers mainly apply during type checking. # provides JS runtime privacy. readonly prevents reassignment through the declaration, not deep mutation. Preventing direct instantiation of abstract classes is a TS check; interfaces and types are erased. override marks an override, with noImplicitOverride improving checks. Use abstract classes for actual shared implementation; otherwise prefer interfaces and composition. This runner only transpiles; use tsc for type errors."
+  ],
+  "url": "https://www.typescriptlang.org/docs/handbook/2/classes.html"
+},
+{
   "id": "oop",
   "title": [
     "面向对象：封装、抽象与组合",
@@ -229,7 +250,7 @@ const tips = [
     url: 'https://nodejs.org/api/packages.html#determining-module-system' }
 ];
 const related = {
-  '26-oop': ['oop', 'typescript', 'references'],
+  '26-oop': ['oop', 'ts-oop', 'typescript', 'references'],
   '25-packages': ['packages', 'modules'],
   '07-json': ['json', 'references', 'copying'],
   '03-values': ['variables', 'references', 'copying'],

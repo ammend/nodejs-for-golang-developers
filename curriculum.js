@@ -154,6 +154,7 @@ export const lessons = [
   },
   {
     "id": "26-oop",
+    "nodeEntry": "main.ts",
     "stage": "language",
     "title": "面向对象与抽象",
     "number": "02.08",

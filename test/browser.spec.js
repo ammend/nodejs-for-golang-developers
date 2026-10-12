@@ -337,7 +337,7 @@ test('Tips breadcrumb opens an alphabetical drawer index and returns to details'
   await dialog.getByRole('button',{name:'TIPS',exact:true}).click();
   await expect(dialog.getByRole('heading',{name:'全部 Tips',exact:true})).toBeVisible();
   const index = dialog.getByRole('navigation',{name:'Tips 目录'});
-  await expect(index.locator('strong')).toHaveText(['Array methods: filter / map / reduce','Arrow functions and declarations','async / await','Declarations and scope','Error and try / catch / finally','ESM / CommonJS','Iteration: Go range and JS loops','JSON: parse and stringify','Microtasks, nextTick and timers','Objects: encapsulation and composition','Packages: npm and lockfiles','Promise / resolve / then','Runtime: V8, Node, libuv and Go GMP','Shallow and deep copies','TypeScript and JavaScript','Values and object references']);
+  await expect(index.locator('strong')).toHaveText(['Array methods: filter / map / reduce','Arrow functions and declarations','async / await','Declarations and scope','Error and try / catch / finally','ESM / CommonJS','Iteration: Go range and JS loops','JSON: parse and stringify','Microtasks, nextTick and timers','Objects: encapsulation and composition','Packages: npm and lockfiles','Promise / resolve / then','Runtime: V8, Node, libuv and Go GMP','Shallow and deep copies','TypeScript and JavaScript','TypeScript object-oriented programming','Values and object references']);
   await index.getByRole('button',{name:'Promise / resolve / then',exact:true}).click();
   await expect(dialog.getByRole('heading',{name:'Promise / resolve / then',exact:true})).toBeVisible();
   await dialog.getByRole('button',{name:'TIPS',exact:true}).click();
