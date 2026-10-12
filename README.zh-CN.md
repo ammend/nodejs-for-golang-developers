@@ -21,19 +21,19 @@ npm start
 远程机器可设置自己的随机长令牌后启动：
 
 ```bash
-HOST=0.0.0.0 PORT=3000 ACCESS_TOKEN='your-random-token-at-least-25-characters' npm start
+HOST=0.0.0.0 PORT=3000 ACCESS_TOKEN='your-random-token-at-least-26-characters' npm start
 ```
 
 访问 `http://服务器IP:3000` 并输入令牌。限可信网络使用，或通过 SSH 加密转发：`ssh -L 3000:127.0.0.1:3000 user@server`。代码使用服务账户的系统权限执行，**不是多用户安全沙箱**。
 
 ## 学习内容
 
-六阶段共 **25 个子项**，每项都有可编辑代码、中英文说明和一个小练习。
+六阶段共 **26 个子项**，每项都有可编辑代码、中英文说明和一个小练习。
 
 | 阶段 | 子项 |
 | --- | --- |
 | 心智模型 · 2 | 值与引用、同步异步与事件循环 |
-| JS / TS · 7 | 判断与循环、函数与模块、包与依赖管理、集合变换、JSON、错误处理、TypeScript |
+| JS / TS · 8 | 判断与循环、函数与模块、包与依赖管理、集合变换、JSON、错误处理、TypeScript、面向对象与抽象 |
 | Node 后端 · 7 | HTTP 服务、路由、查询参数、请求体、响应头、中间件、文件 |
 | 前端 · 3 | HTML/CSS、DOM 事件、React/JSX |
 | 全栈整合 · 3 | API 消费、服务端渲染、表单校验 |

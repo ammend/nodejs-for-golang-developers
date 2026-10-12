@@ -337,7 +337,7 @@ test('Tips breadcrumb opens an alphabetical drawer index and returns to details'
   await dialog.getByRole('button',{name:'TIPS',exact:true}).click();
   await expect(dialog.getByRole('heading',{name:'全部 Tips',exact:true})).toBeVisible();
   const index = dialog.getByRole('navigation',{name:'Tips 目录'});
-  await expect(index.locator('strong')).toHaveText(['Array methods: filter / map / reduce','Arrow functions and declarations','async / await','Declarations and scope','Error and try / catch / finally','ESM / CommonJS','Iteration: Go range and JS loops','JSON: parse and stringify','Microtasks, nextTick and timers','Packages: npm and lockfiles','Promise / resolve / then','Runtime: V8, Node, libuv and Go GMP','Shallow and deep copies','TypeScript and JavaScript','Values and object references']);
+  await expect(index.locator('strong')).toHaveText(['Array methods: filter / map / reduce','Arrow functions and declarations','async / await','Declarations and scope','Error and try / catch / finally','ESM / CommonJS','Iteration: Go range and JS loops','JSON: parse and stringify','Microtasks, nextTick and timers','Objects: encapsulation and composition','Packages: npm and lockfiles','Promise / resolve / then','Runtime: V8, Node, libuv and Go GMP','Shallow and deep copies','TypeScript and JavaScript','Values and object references']);
   await index.getByRole('button',{name:'Promise / resolve / then',exact:true}).click();
   await expect(dialog.getByRole('heading',{name:'Promise / resolve / then',exact:true})).toBeVisible();
   await dialog.getByRole('button',{name:'TIPS',exact:true}).click();
@@ -412,4 +412,22 @@ test('package lesson runs self-reference and links installation guidance', async
   await page.locator('.tips-bar').getByRole('button',{name:'npm、依赖与锁文件'}).click();
   await expect(page.getByRole('dialog')).toContainText('npm ci');
   await expect(page.getByRole('dialog')).toContainText('go.sum');
+});
+
+test('OOP lesson shows shared behavior and links abstraction tips', async ({page}) => {
+  await page.goto('/');
+  await page.evaluate(() => localStorage.setItem('nodejs-for-golang-developers:last', JSON.stringify('26-oop')));
+  await page.reload();
+  await expect(page.getByRole('heading',{level:1})).toHaveText('面向对象与抽象');
+  for (const [name, cls] of [['Node.js','node'],['Go','go']]) {
+    await page.getByRole('button',{name:`运行 ${name}`,exact:true}).click();
+    await expect(page.locator(`.${cls} .output`)).toContainText('wallet balance 70');
+    await expect(page.locator(`.${cls} .output`)).toContainText('gift paid 30');
+    await expect(page.locator(`.${cls} .output`)).toContainText('declined');
+  }
+  await page.locator('.tips-bar').getByRole('button',{name:'面向对象：封装、抽象与组合'}).click();
+  await expect(page.getByRole('dialog')).toContainText('interface Payment');
+  await page.keyboard.press('Escape');
+  await page.getByLabel('语言 / Language').selectOption('en');
+  await expect(page.getByRole('heading',{level:1})).toHaveText('Objects and abstraction');
 });

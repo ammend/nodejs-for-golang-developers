@@ -2,6 +2,27 @@ import React, { useEffect, useRef, useState } from "react";
 
 const tips = [
 {
+  "id": "oop",
+  "title": [
+    "面向对象：封装、抽象与组合",
+    "Objects: encapsulation and composition"
+  ],
+  "intro": [
+    "把状态和行为放在一起是封装；让调用方只依赖需要的行为是抽象。多态允许不同实现响应同一种操作，不一定需要继承。",
+    "Encapsulation groups state and behavior; abstraction exposes only the behavior callers need. Polymorphism lets different implementations respond to the same operation without requiring inheritance."
+  ],
+  "code": "// TypeScript: compile-time contract / 编译期契约\ninterface Payment {\n  pay(amount: number): string;\n}\nclass Checkout {\n  constructor(private payment: Payment) {}\n  buy(amount: number): string {\n    return this.payment.pay(amount);\n  }\n}\n// Structural typing: no shared base class required\n// 结构化类型：不要求共同父类\nconst card: Payment = { pay: amount => `paid ${amount}` };\nconsole.log(new Checkout(card).buy(30));",
+  "go": [
+    "Go 的方法集决定是否满足接口，无需 implements。修改结构体状态通常使用指针接收者。JS class 方法通过 this 访问实例；# 字段是运行时私有，Go 小写字段则是包级不可导出。TS interface 在编译后被擦除，不能验证外部 JSON。",
+    "Go method sets determine interface satisfaction without implements; mutable state usually uses pointer receivers. JS class methods access instances via this. # fields are runtime-private; Go lowercase fields are package-unexported. TS interfaces are erased and cannot validate external JSON."
+  ],
+  "trap": [
+    "JS class 建立在原型机制之上；extends/super 支持继承，但 Go 没有类继承，结构体嵌入也不等于子类。优先按需要组合对象，避免为了 OOP 制造父类层级。JS 方法单独取出调用可能丢失 this；TS private 通常只做类型检查，区别于 JS #。本例 GiftCard 是教学替身，并非真实支付或资金校验实现。",
+    "JS classes use prototypes; extends/super support inheritance, while Go has no class inheritance and embedding is not subclassing. Compose objects as needed rather than inventing class hierarchies. Extracted JS methods can lose this; TS private is usually a type-checking restriction, unlike JS #. GiftCard is a teaching stand-in, not a real payment or funds-validation implementation."
+  ],
+  "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes"
+},
+{
   "id": "packages",
   "title": [
     "npm、依赖与锁文件",
@@ -208,6 +229,7 @@ const tips = [
     url: 'https://nodejs.org/api/packages.html#determining-module-system' }
 ];
 const related = {
+  '26-oop': ['oop', 'typescript', 'references'],
   '25-packages': ['packages', 'modules'],
   '07-json': ['json', 'references', 'copying'],
   '03-values': ['variables', 'references', 'copying'],

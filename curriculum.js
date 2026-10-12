@@ -153,6 +153,20 @@ export const lessons = [
     "nodeEntry": "main.ts"
   },
   {
+    "id": "26-oop",
+    "stage": "language",
+    "title": "面向对象与抽象",
+    "number": "02.08",
+    "description": "封装状态，以行为抽象连接不同实现，使用组合构建结账流程。",
+    "observe": "钱包与礼品卡使用同一结账流程；钱包扣款后，余额不足的支付被拒绝。",
+    "differences": [
+      "Go 用结构体、方法与接口；JS 用 class、方法和鸭子类型表达相同的行为抽象。",
+      "Go 小写字段在包外不可访问；JS # 私有字段在类外不可访问，封装边界不同。",
+      "Checkout 组合支付对象，不依赖共同父类。Go 接口隐式实现；JS 错误的对象形状会在运行时暴露。"
+    ],
+    "exercise": "增加一个同样提供支付方法的实现，不修改 Checkout，再比较两侧输出。"
+  },
+  {
     "id": "01-http-server",
     "stage": "backend",
     "title": "最小 HTTP 服务",
@@ -515,5 +529,12 @@ export const lessonEnglish = {
   "两侧无需安装第三方依赖。Node 按包名自引用 exports，Go 调用同包函数。": "Neither side needs third-party dependencies. Node self-references its exports by package name; Go calls a same-package function.",
   "package.json 声明元数据、依赖和脚本；go.mod 声明模块路径与依赖。": "package.json declares metadata, dependencies and scripts; go.mod declares the module path and dependencies.",
   "package-lock.json 锁定依赖树；go.sum 记录校验信息，不是同一种锁文件。": "package-lock.json locks the dependency tree; go.sum records checksums and is not the same kind of lockfile.",
-  "在本地运行 npm start，对照网页输出；修改 greet 实现再次运行。命令说明见 Tips。": "Run npm start locally and compare the web output; edit greet and rerun. See Tips for commands."
+  "在本地运行 npm start，对照网页输出；修改 greet 实现再次运行。命令说明见 Tips。": "Run npm start locally and compare the web output; edit greet and rerun. See Tips for commands.",
+  "面向对象与抽象": "Objects and abstraction",
+  "封装状态，以行为抽象连接不同实现，使用组合构建结账流程。": "Encapsulate state, connect implementations through behavior, and compose a checkout flow.",
+  "钱包与礼品卡使用同一结账流程；钱包扣款后，余额不足的支付被拒绝。": "Wallet and gift card share a checkout flow; after spending, the wallet rejects an unaffordable payment.",
+  "Go 用结构体、方法与接口；JS 用 class、方法和鸭子类型表达相同的行为抽象。": "Go uses structs, methods and interfaces; JS uses classes, methods and duck typing for the same behavioral abstraction.",
+  "Go 小写字段在包外不可访问；JS # 私有字段在类外不可访问，封装边界不同。": "Go lowercase fields are inaccessible outside the package; JS # private fields are inaccessible outside the class. The encapsulation boundaries differ.",
+  "Checkout 组合支付对象，不依赖共同父类。Go 接口隐式实现；JS 错误的对象形状会在运行时暴露。": "Checkout composes a payment object without a shared superclass. Go interfaces are satisfied implicitly; invalid JS object shapes fail at runtime.",
+  "增加一个同样提供支付方法的实现，不修改 Checkout，再比较两侧输出。": "Add another payment implementation without changing Checkout, then compare both outputs."
 };
