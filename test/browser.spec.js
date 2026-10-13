@@ -239,8 +239,8 @@ test("frontend React preview is interactive, isolated and works without external
       : route.abort(),
   );
   await page.goto("/");
-  await page.locator(".stage-title").filter({ hasText: "前端" }).click();
-  await page.getByRole("button", { name: /React 与 JSX/ }).click();
+  await page.locator(".stage-title").filter({ hasText: "React" }).click();
+  await page.getByRole("button", { name: /useState：让界面记住数据/ }).click();
   await page.getByRole("button", { name: "运行 浏览器", exact: true }).click();
   const frame = page.frameLocator("iframe");
   await expect(frame.locator("output")).toHaveText("0", { timeout: 15000 });
@@ -252,7 +252,7 @@ test("frontend React preview is interactive, isolated and works without external
   );
   await page.getByLabel("语言 / Language").selectOption("en");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
-    "React and JSX",
+    "useState: state for the screen",
   );
   await expect(frame.locator("output")).toHaveText("1");
   await page.setViewportSize({width:390,height:844});
@@ -337,7 +337,7 @@ test('Tips breadcrumb opens an alphabetical drawer index and returns to details'
   await dialog.getByRole('button',{name:'TIPS',exact:true}).click();
   await expect(dialog.getByRole('heading',{name:'全部 Tips',exact:true})).toBeVisible();
   const index = dialog.getByRole('navigation',{name:'Tips 目录'});
-  await expect(index.locator('strong')).toHaveText(['Array methods: filter / map / reduce','Arrow functions and declarations','async / await','Declarations and scope','Error and try / catch / finally','ESM / CommonJS','Iteration: Go range and JS loops','JSON: parse and stringify','Microtasks, nextTick and timers','Objects: encapsulation and composition','Packages: npm and lockfiles','Promise / resolve / then','Runtime: V8, Node, libuv and Go GMP','Shallow and deep copies','TypeScript and JavaScript','TypeScript object-oriented programming','Values and object references']);
+  await expect(index.locator('strong')).toHaveText(['Array methods: filter / map / reduce','Arrow functions and declarations','async / await','Declarations and scope','Error and try / catch / finally','ESM / CommonJS','Iteration: Go range and JS loops','JSON: parse and stringify','Microtasks, nextTick and timers','Objects: encapsulation and composition','Packages: npm and lockfiles','Promise / resolve / then','React: imports, components and Hooks','React: useEffect','React: useMemo','React: useRef','React: useState','Runtime: V8, Node, libuv and Go GMP','Shallow and deep copies','TypeScript and JavaScript','TypeScript object-oriented programming','Values and object references']);
   await index.getByRole('button',{name:'Promise / resolve / then',exact:true}).click();
   await expect(dialog.getByRole('heading',{name:'Promise / resolve / then',exact:true})).toBeVisible();
   await dialog.getByRole('button',{name:'TIPS',exact:true}).click();
@@ -465,4 +465,44 @@ test('fragment token is consumed, reused after refresh and never sent in page UR
   await expect(page.locator('.node .output')).toContainText('authorized');
   expect(urls.every(url=>!url.includes(token))).toBe(true);
   expect(await page.evaluate(()=>localStorage.getItem('nodejs-for-golang-developers:access-token'))).toBeNull();
+});
+
+test('React section teaches components, effects, refs and memo with working previews', async ({page}) => {
+  const errors=[];page.on('pageerror',e=>errors.push(e.message));
+  async function open(id) {
+    await page.goto('/');
+    await page.evaluate(id=>localStorage.setItem('nodejs-for-golang-developers:last',JSON.stringify(id)),id);
+    await page.reload();
+    await page.getByRole('button',{name:'运行 浏览器',exact:true}).click();
+    await expect(page.locator('iframe')).toBeVisible();
+    return page.frameLocator('iframe');
+  }
+  let frame=await open('27-react-components');
+  await expect(frame.getByRole('heading',{name:'Hello, Ada!'})).toBeVisible();
+  await expect(frame.getByRole('heading',{name:'Hello, Lin!'})).toBeVisible();
+  await page.locator('.tips-bar').getByRole('button',{name:'React 导入、组件与 Hooks'}).click();
+  await expect(page.getByRole('dialog')).toContainText('具名导入');
+  await page.keyboard.press('Escape');
+  frame=await open('28-react-effect');
+  await frame.getByRole('button',{name:'Start / 开始'}).click();
+  await expect(frame.locator('output')).not.toHaveText('0');
+  await frame.getByRole('button',{name:'Pause / 暂停'}).click();
+  const paused=await frame.locator('output').innerText();
+  await page.waitForTimeout(1200);
+  await expect(frame.locator('output')).toHaveText(paused);
+  frame=await open('29-react-ref');
+  await frame.getByRole('button',{name:'Focus / 聚焦'}).click();
+  await expect(frame.getByRole('textbox')).toBeFocused();
+  for(let i=0;i<3;i++) await frame.getByRole('button',{name:'Remember / 记一次'}).click();
+  await expect(frame.locator('output')).toHaveText('0');
+  await frame.getByRole('button',{name:'Show / 显示记录'}).click();
+  await expect(frame.locator('output')).toHaveText('3');
+  frame=await open('30-react-memo');
+  await frame.getByRole('textbox').fill('ad');
+  await expect(frame.locator('li')).toHaveText(['Ada']);
+  await frame.getByRole('button',{name:'Theme / 切换主题'}).click();
+  await expect(frame.locator('li')).toHaveText(['Ada']);
+  await page.getByLabel('语言 / Language').selectOption('en');
+  await expect(page.getByRole('heading',{level:1})).toHaveText('useMemo: cache derived results');
+  expect(errors).toEqual([]);
 });

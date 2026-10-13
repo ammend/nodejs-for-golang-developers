@@ -17,7 +17,12 @@ export const stages = [
   {
     "id": "frontend",
     "title": "前端",
-    "summary": "浏览器、样式与 React"
+    "summary": "HTML、CSS 与 DOM"
+  },
+  {
+    "id": "react",
+    "title": "React",
+    "summary": "组件、状态与 Hooks"
   },
   {
     "id": "fullstack",
@@ -291,17 +296,77 @@ export const lessons = [
     "entry": "main.js"
   },
   {
-    "id": "17-react",
-    "stage": "frontend",
-    "title": "React 与 JSX",
-    "number": "04.03",
-    "description": "用组件和状态声明界面。",
-    "observe": "点击按钮，React 根据新状态重新渲染。",
+    "id": "27-react-components",
+    "stage": "react",
+    "title": "组件、JSX 与导入",
+    "number": "05.01",
+    "description": "从返回界面的函数开始，认识 props 和 import。",
+    "observe": "修改 Ada 的名字，观察两个组件独立接收参数。",
     "differences": [
-      "useState 保存组件状态，setter 触发重新渲染。",
-      "JSX 需要构建；这里使用本地 esbuild 与项目内 React，无外部 CDN。"
+      "组件名大写；JSX 中花括号放 JS 表达式，props 是只读输入。",
+      "浏览器运行 React 界面；Node 在这里负责构建 JSX。"
     ],
-    "exercise": "让按钮每次增加 2，并显示当前计数是否为偶数。",
+    "exercise": "再添加一个 Greeting 组件，传入自己的名字。",
+    "mode": "browser",
+    "entry": "main.jsx"
+  },
+  {
+    "id": "17-react",
+    "stage": "react",
+    "title": "useState：让界面记住数据",
+    "number": "05.02",
+    "description": "普通变量不会让 React 自动更新界面，state 可以。",
+    "observe": "点击加一，新的状态触发组件重新渲染。",
+    "differences": [
+      "useState 返回当前状态与 setter；依赖旧值更新时使用函数形式。",
+      "浏览器运行 React 界面；Node 在这里负责构建 JSX。"
+    ],
+    "exercise": "增加一个减一按钮，使用 setCount(n => n - 1)。",
+    "mode": "browser",
+    "entry": "main.jsx"
+  },
+  {
+    "id": "28-react-effect",
+    "stage": "react",
+    "title": "useEffect：连接外部系统",
+    "number": "05.03",
+    "description": "把 React 状态与外部计时器保持同步。",
+    "observe": "开始后每秒加一，暂停后停止；再次开始不叠加计时器。",
+    "differences": [
+      "依赖变化时先清理旧 Effect 再建立新 Effect；卸载时也清理。",
+      "浏览器运行 React 界面；Node 在这里负责构建 JSX。"
+    ],
+    "exercise": "把每次加一改成加二，暂停再开始检查行为。",
+    "mode": "browser",
+    "entry": "main.jsx"
+  },
+  {
+    "id": "29-react-ref",
+    "stage": "react",
+    "title": "useRef：保存引用而不刷新",
+    "number": "05.04",
+    "description": "用 ref 找到输入框，也保存不直接显示的计数。",
+    "observe": "记三次不会更新数字，点显示记录才显示 3；聚焦按钮定位输入框。",
+    "differences": [
+      "修改 ref.current 不触发渲染；界面需要展示的值应由 state 驱动。",
+      "浏览器运行 React 界面；Node 在这里负责构建 JSX。"
+    ],
+    "exercise": "增加清空记录按钮，同时重置 ref 和显示状态。",
+    "mode": "browser",
+    "entry": "main.jsx"
+  },
+  {
+    "id": "30-react-memo",
+    "stage": "react",
+    "title": "useMemo：缓存派生结果",
+    "number": "05.05",
+    "description": "根据搜索词筛选名单，认识依赖数组与计算缓存。",
+    "observe": "搜索筛选名单；切换主题仍保留结果，筛选依赖没有改变。",
+    "differences": [
+      "useMemo 是性能优化，不保证永远保留缓存；移除它也必须保持正确。",
+      "浏览器运行 React 界面；Node 在这里负责构建 JSX。"
+    ],
+    "exercise": "去掉 useMemo，直接调用 filter，确认功能相同。",
     "mode": "browser",
     "entry": "main.jsx"
   },
@@ -309,7 +374,7 @@ export const lessons = [
     "id": "18-api-contract",
     "stage": "fullstack",
     "title": "API 契约与数据消费",
-    "number": "05.01",
+    "number": "06.01",
     "description": "先请求 JSON API，再把响应转换为页面。",
     "observe": "终端显示真实 HTTP 响应，预览显示消费结果。",
     "differences": [
@@ -323,7 +388,7 @@ export const lessons = [
     "id": "19-ssr",
     "stage": "fullstack",
     "title": "服务端渲染",
-    "number": "05.02",
+    "number": "06.02",
     "description": "后端把业务数据渲染为 HTML。",
     "observe": "HTTP 返回完整 HTML，预览显示结果。",
     "differences": [
@@ -337,7 +402,7 @@ export const lessons = [
     "id": "20-validation",
     "stage": "fullstack",
     "title": "表单与服务端校验",
-    "number": "05.03",
+    "number": "06.03",
     "description": "模拟提交表单，服务端决定接受或拒绝。",
     "observe": "空名字得到 422，有效名字得到成功页面。",
     "differences": [
@@ -351,7 +416,7 @@ export const lessons = [
     "id": "21-todo",
     "stage": "practice",
     "title": "实战：待办 API",
-    "number": "06.01",
+    "number": "07.01",
     "description": "串起创建、查询与删除的完整请求流程。",
     "observe": "POST 创建 → GET 查询 → DELETE 删除 → GET 空列表。",
     "differences": [
@@ -364,7 +429,7 @@ export const lessons = [
     "id": "22-config",
     "stage": "practice",
     "title": "实战：配置与启动参数",
-    "number": "06.02",
+    "number": "07.02",
     "description": "集中解析配置，并在启动前拒绝非法值。",
     "observe": "有效端口输出 3000，非法端口得到错误。",
     "differences": [
@@ -377,7 +442,7 @@ export const lessons = [
     "id": "23-tests",
     "stage": "practice",
     "title": "实战：行为测试",
-    "number": "06.03",
+    "number": "07.03",
     "description": "把重要行为写成可以运行的断言。",
     "observe": "正常实现打印 3 checks passed；修改实现后断言失败。",
     "differences": [
@@ -537,5 +602,33 @@ export const lessonEnglish = {
   "Go 用结构体、方法与接口；JS 用 class、方法和鸭子类型表达相同的行为抽象。": "Go uses structs, methods and interfaces; JS uses classes, methods and duck typing for the same behavioral abstraction.",
   "Go 小写字段在包外不可访问；JS # 私有字段在类外不可访问，封装边界不同。": "Go lowercase fields are inaccessible outside the package; JS # private fields are inaccessible outside the class. The encapsulation boundaries differ.",
   "Checkout 组合支付对象，不依赖共同父类。Go 接口隐式实现；JS 错误的对象形状会在运行时暴露。": "Checkout composes a payment object without a shared superclass. Go interfaces are satisfied implicitly; invalid JS object shapes fail at runtime.",
-  "增加一个同样提供支付方法的实现，不修改 Checkout，再比较两侧输出。": "Add another payment implementation without changing Checkout, then compare both outputs."
+  "增加一个同样提供支付方法的实现，不修改 Checkout，再比较两侧输出。": "Add another payment implementation without changing Checkout, then compare both outputs.",
+  "HTML、CSS 与 DOM": "HTML, CSS and the DOM",
+  "组件、状态与 Hooks": "Components, state and Hooks",
+  "组件、JSX 与导入": "Components, JSX and imports",
+  "从返回界面的函数开始，认识 props 和 import。": "Start with a function returning UI, then learn props and imports.",
+  "修改 Ada 的名字，观察两个组件独立接收参数。": "Change Ada’s name and observe two components receiving separate props.",
+  "组件名大写；JSX 中花括号放 JS 表达式，props 是只读输入。": "Component names start uppercase; JSX braces hold JS expressions, and props are read-only inputs.",
+  "浏览器运行 React 界面；Node 在这里负责构建 JSX。": "The browser runs the React UI; Node builds the JSX here.",
+  "再添加一个 Greeting 组件，传入自己的名字。": "Add another Greeting with your name.",
+  "useState：让界面记住数据": "useState: state for the screen",
+  "普通变量不会让 React 自动更新界面，state 可以。": "Ordinary variables do not request UI updates; state does.",
+  "点击加一，新的状态触发组件重新渲染。": "Click Add to request a render with the next state.",
+  "useState 返回当前状态与 setter；依赖旧值更新时使用函数形式。": "useState returns state and a setter; use an updater function when the next value depends on the previous value.",
+  "增加一个减一按钮，使用 setCount(n => n - 1)。": "Add a decrement button with setCount(n => n - 1).",
+  "useEffect：连接外部系统": "useEffect: connect external systems",
+  "把 React 状态与外部计时器保持同步。": "Keep an external timer synchronized with React state.",
+  "开始后每秒加一，暂停后停止；再次开始不叠加计时器。": "Start increments each second; Pause stops it, and restarting does not accumulate timers.",
+  "依赖变化时先清理旧 Effect 再建立新 Effect；卸载时也清理。": "When dependencies change, React cleans up the old Effect before setting up the new one; unmount also cleans up.",
+  "把每次加一改成加二，暂停再开始检查行为。": "Increment by two instead, then pause and restart.",
+  "useRef：保存引用而不刷新": "useRef: remember without rendering",
+  "用 ref 找到输入框，也保存不直接显示的计数。": "Use a ref to access an input and store a count that does not directly render.",
+  "记三次不会更新数字，点显示记录才显示 3；聚焦按钮定位输入框。": "Remember three times leaves the screen unchanged; Show displays 3. Focus targets the input.",
+  "修改 ref.current 不触发渲染；界面需要展示的值应由 state 驱动。": "Changing ref.current does not trigger rendering; visible values should be driven by state.",
+  "增加清空记录按钮，同时重置 ref 和显示状态。": "Add a reset button for both the ref and displayed state.",
+  "useMemo：缓存派生结果": "useMemo: cache derived results",
+  "根据搜索词筛选名单，认识依赖数组与计算缓存。": "Filter names by a search term and learn dependencies and memoization.",
+  "搜索筛选名单；切换主题仍保留结果，筛选依赖没有改变。": "Search filters names; toggling the theme preserves results without changing the filter dependency.",
+  "useMemo 是性能优化，不保证永远保留缓存；移除它也必须保持正确。": "useMemo is a performance optimization, not permanent storage; removing it must preserve correctness.",
+  "去掉 useMemo，直接调用 filter，确认功能相同。": "Remove useMemo, call filter directly, and verify identical behavior."
 };

@@ -438,7 +438,7 @@ function App() {
         <p className="sidebar-note">
           {t("点运行即计入进度。")}
           <br />
-          {t("六阶段，循序渐进。")}
+          {t("循序渐进，边学边练。")}
         </p>
       </aside>
       <main>

@@ -261,7 +261,7 @@ test("remote binding refuses an explicitly weak access token", async () => {
 
 test("every curriculum item has a working implementation and translated content", async () => {
   const { lessons, stages, lessonEnglish } = await import("../curriculum.js");
-  assert.equal(lessons.length, 26);
+  assert.equal(lessons.length, 30);
   assert.equal(new Set(lessons.map((item) => item.id)).size, lessons.length);
   for (const stage of stages)
     assert.ok(lessons.some((item) => item.stage === stage.id));

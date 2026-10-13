@@ -28,14 +28,15 @@ Open the private access link printed at startup (replace its host with your reac
 
 ## Curriculum
 
-All **26 items across six stages** include editable code, Chinese/English explanations, and an exercise.
+All **30 items across seven sections** include editable code, Chinese/English explanations, and an exercise.
 
 | Stage | Items |
 | --- | --- |
 | Mental models · 2 | Values and references; sync, async and the event loop |
 | JS / TS · 8 | Conditions and loops; functions and modules; packages and dependencies; collections; JSON; errors; TypeScript; objects and abstraction |
 | Node backend · 7 | HTTP server; routing; query parameters; request bodies; headers; middleware; files |
-| Frontend · 3 | HTML/CSS; DOM events; React/JSX |
+| Frontend · 2 | HTML/CSS; DOM events |
+| React · 5 | Components/JSX/imports; useState; useEffect; useRef; useMemo |
 | Full-stack integration · 3 | API consumption; server rendering; form validation |
 | Projects · 3 | Todo API; configuration; behavior tests |
 

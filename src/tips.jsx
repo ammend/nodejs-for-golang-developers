@@ -2,6 +2,111 @@ import React, { useEffect, useRef, useState } from "react";
 
 const tips = [
 {
+  "id": "react-basics",
+  "title": [
+    "React 导入、组件与 Hooks",
+    "React: imports, components and Hooks"
+  ],
+  "intro": [
+    "React 用组件描述界面。组件像返回界面的小函数，props 是输入。Hook 是让函数组件使用状态等 React 能力的函数。",
+    "React describes UI with components: functions returning UI, with props as input. Hooks let function components use React features such as state."
+  ],
+  "code": "import React, { useEffect, useMemo, useRef, useState } from 'react';\n// React: default import / 默认导入\n// { ... }: named imports / 具名导入，不是调用这些函数\n// 'react': package name / 包名\n\nfunction Hello({ name }) { return <h1>Hello, {name}</h1>; }\n// <Hello name=\"Ada\" />",
+  "go": [
+    "像 Go 函数接收参数，但 React 会重新调用组件计算界面；不要在渲染过程中改外部状态。",
+    "Like Go functions, components receive inputs, but React calls them again to calculate UI; do not mutate external state during rendering."
+  ],
+  "trap": [
+    "useState 是界面记忆，useEffect 同步外部系统，useRef 保存引用，useMemo 缓存计算。通常只导入用到的 Hook。本项目自动 JSX 转换不要求为 JSX 单独 import React。这里的四种 Hook 必须在组件或自定义 Hook 顶层调用，不能放在条件或循环里。",
+    "useState remembers UI state; useEffect synchronizes external systems; useRef holds references; useMemo caches calculations. Import only what you use. This project’s automatic JSX transform does not require the default React import for JSX. These four Hooks must be called at the top level of components or custom Hooks, not inside conditions or loops."
+  ],
+  "url": "https://react.dev/learn/your-first-component"
+},
+{
+  "id": "react-state",
+  "title": [
+    "useState：界面的记忆",
+    "React: useState"
+  ],
+  "intro": [
+    "把 count 想成屏幕上的数字，setCount 是通知 React 改数字的按钮。",
+    "Think of count as the number on screen and setCount as a request to update it."
+  ],
+  "code": "const [count, setCount] = useState(0);\n// Inside an event handler / 在事件处理函数中:\nsetCount(n => n + 1);",
+  "go": [
+    "不像直接修改 Go 局部变量，setter 请求下一次渲染；当前函数里的 count 仍是当前渲染的快照。",
+    "Unlike assigning a Go local, a setter requests another render; count in the current function remains the current render’s snapshot."
+  ],
+  "trap": [
+    "不要直接改 state 对象或数组，创建新值传给 setter。组件重新渲染会重新执行函数，但 React 保存对应的 state。",
+    "Do not mutate state objects or arrays directly; pass a new value to the setter. React reruns the function but retains the component’s state."
+  ],
+  "url": "https://react.dev/reference/react/useState"
+},
+{
+  "id": "react-effect",
+  "title": [
+    "useEffect：同步与清理",
+    "React: useEffect"
+  ],
+  "intro": [
+    "Effect 用来把组件和 React 之外的计时器、订阅等系统连接起来。",
+    "Effects connect a component to systems outside React, such as timers and subscriptions."
+  ],
+  "code": "useEffect(() => {\n  const id = setInterval(() => setCount(n => n + 1), 1000);\n  return () => clearInterval(id);\n}, []);",
+  "go": [
+    "清理函数有点像资源释放，但不是 Go 函数返回时的 defer；React 在重新同步或卸载时调用。",
+    "Cleanup resembles resource release, but is not Go defer at function return; React calls it on resynchronization or unmount."
+  ],
+  "trap": [
+    "无依赖数组：每次提交后运行；[]：挂载时建立，卸载时清理；[x]：x 改变时重新同步。声明 Effect 读取的响应式依赖，不要靠漏写依赖阻止更新。开发 StrictMode 可额外执行一次建立/清理检查。Effect 不是计算派生值的默认位置，也不是让点击事件运行的地方。",
+    "No dependency array: after every commit; []: setup on mount and cleanup on unmount; [x]: resynchronize when x changes. Declare reactive dependencies read by the Effect rather than omitting them to suppress updates. Development StrictMode may perform an extra setup/cleanup check. Effects are not the default place for derived values or click handlers."
+  ],
+  "url": "https://react.dev/reference/react/useEffect"
+},
+{
+  "id": "react-ref",
+  "title": [
+    "useRef：不触发渲染的小抽屉",
+    "React: useRef"
+  ],
+  "intro": [
+    "ref 是跨渲染保留的盒子，内容放在 current；换内容不会自动刷新界面。",
+    "A ref is a box retained across renders. Its contents live in current; changing them does not refresh the UI."
+  ],
+  "code": "const inputRef = useRef(null);\n// JSX: <input ref={inputRef} />\n// Event handler / 事件处理:\ninputRef.current?.focus();",
+  "go": [
+    "可以类比保存一个句柄，但不是 Go 指针的内存模型；React 的 ref 对象有稳定身份。",
+    "It can be compared to keeping a handle, but does not share Go pointer semantics; React retains a stable ref object."
+  ],
+  "trap": [
+    "DOM 挂载后才有引用，卸载后可能为 null。需要显示的数据用 state；不要在渲染期间任意读写 ref.current。常用于 DOM、计时器 ID 等。",
+    "DOM references are available after mounting and may be null after unmounting. Use state for displayed data; avoid arbitrary reads/writes of ref.current during render. Typical uses include DOM nodes and timer IDs."
+  ],
+  "url": "https://react.dev/reference/react/useRef"
+},
+{
+  "id": "react-memo",
+  "title": [
+    "useMemo：缓存计算而非保存状态",
+    "React: useMemo"
+  ],
+  "intro": [
+    "依赖没变时复用计算结果，避免重复做昂贵的纯计算。先写正确，再考虑优化。",
+    "Reuse a calculation when dependencies have not changed, avoiding expensive pure recalculation. Get correctness first, then optimize."
+  ],
+  "code": "const visible = useMemo(\n  () => names.filter(name => name.includes(query)),\n  [names, query]\n);",
+  "go": [
+    "类似缓存函数结果；不是 goroutine、不是异步执行，也不会把计算搬到后台线程。",
+    "Comparable to caching a function result: it is not a goroutine, async execution or a background thread."
+  ],
+  "trap": [
+    "第一次仍需计算；依赖按 Object.is 比较，新建对象会改变依赖身份。计算必须纯粹，不能在里面请求网络或修改状态。缓存可能被丢弃，移除 useMemo 后功能也应正确，小计算通常不值得缓存。",
+    "The first render still calculates. Dependencies use Object.is; newly created objects change identity. Keep calculations pure, without network requests or state changes. Caches may be discarded; functionality must remain correct without useMemo. Small calculations often do not need caching."
+  ],
+  "url": "https://react.dev/reference/react/useMemo"
+},
+{
   "id": "ts-oop",
   "title": [
     "TypeScript 面向对象",
@@ -250,6 +355,10 @@ const tips = [
     url: 'https://nodejs.org/api/packages.html#determining-module-system' }
 ];
 const related = {
+ '27-react-components': ['react-basics', 'modules'],
+ '28-react-effect': ['react-effect', 'react-state'],
+ '29-react-ref': ['react-ref', 'react-state'],
+ '30-react-memo': ['react-memo', 'array-methods'],
   '26-oop': ['oop', 'ts-oop', 'typescript', 'references'],
   '25-packages': ['packages', 'modules'],
   '07-json': ['json', 'references', 'copying'],
@@ -258,7 +367,7 @@ const related = {
   '24-control-flow': ['variables', 'iteration'],
   '06-collections': ['array-methods', 'iteration', 'functions'], '08-errors': ['errors', 'promise', 'await'],
   '09-typescript': ['typescript', 'functions', 'modules'], '14-files': ['await'],
-  '17-react': ['functions', 'modules'], '18-api-contract': ['await', 'promise']
+  '17-react': ['react-state', 'react-basics'], '18-api-contract': ['await', 'promise']
 };
 function QueueDemo({ en }) {
   const [mode, setMode] = useState('ESM');
